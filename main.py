@@ -1,15 +1,15 @@
 import os
 
-import discord
 from discord import TextChannel, VoiceState, VoiceChannel, Member
+from discord.ext import commands
 
 TOKEN = os.getenv("TOKEN")
 text_channel_id = int(os.getenv("TEXT_CHANNEL_ID"))
 voice_channel_id = int(os.getenv("VOICE_CHANNEL_ID"))
-mg_id = int(os.getenv("MG_ID"))
+gm_id = int(os.getenv("GM_ID"))
 
 
-class MyClient(discord.Client):
+class MyBot(commands.Bot):
     async def on_ready(self):
         print('Logged in as')
         print(self.user.name)
@@ -17,30 +17,30 @@ class MyClient(discord.Client):
         print('------')
 
 
-client = MyClient()
+bot = MyBot('!')
 
 
-async def remind_mg_about_recording(after, member):
-    text_channel: TextChannel = client.get_channel(text_channel_id)
-    voice_channel: VoiceChannel = client.get_channel(voice_channel_id)
+async def remind_gm_about_recording(after, member):
+    text_channel: TextChannel = bot.get_channel(text_channel_id)
+    voice_channel: VoiceChannel = bot.get_channel(voice_channel_id)
     if voice_channel == after.channel:
         await text_channel.send(f'Nie zapomnij o nagrywaniu, {member.mention}!')
 
 
 async def remind_about_short_term_tasks(after, member):
-    text_channel: TextChannel = client.get_channel(text_channel_id)
-    voice_channel: VoiceChannel = client.get_channel(voice_channel_id)
+    text_channel: TextChannel = bot.get_channel(text_channel_id)
+    voice_channel: VoiceChannel = bot.get_channel(voice_channel_id)
     if voice_channel == after.channel:
         await text_channel.send(f"Nie zapomnij o celu krótkoterminowym, {member.mention}!")
 
 
-@client.event
+@bot.event
 async def on_voice_state_update(member: Member, before: VoiceState, after: VoiceState):
-    mg = client.get_user(mg_id)
+    mg = bot.get_user(gm_id)
     if mg == member:
-        await remind_mg_about_recording(after, member)
+        await remind_gm_about_recording(after, member)
     else:
         await remind_about_short_term_tasks(after, member)
 
 
-client.run(TOKEN)
+bot.run(TOKEN)
