@@ -8,10 +8,9 @@ import asyncio
 from discord import Message, Status, TextChannel, VoiceState, VoiceChannel, Member
 
 TOKEN = os.getenv("TOKEN")
-text_channel_id = 596736875549556748
-voice_channel_id = 596736875549556752
-shan_id = 440059101284663296
-mg_id = 366836191854723072
+text_channel_id = int(os.getenv("TEXT_CHANNEL_ID"))
+voice_channel_id = int(os.getenv("VOICE_CHANNEL_ID"))
+mg_id = int(os.getenv("MG_ID"))
 
 
 class MyClient(discord.Client):
@@ -32,7 +31,7 @@ async def remind_mg_about_recording(after, member):
         await text_channel.send(f'Nie zapomnij o nagrywaniu, {member.mention}!')
 
 
-def remind_about_short_term_tasks(after, member):
+async def remind_about_short_term_tasks(after, member):
     text_channel: TextChannel = client.get_channel(text_channel_id)
     voice_channel: VoiceChannel = client.get_channel(voice_channel_id)
     if voice_channel == after.channel:
