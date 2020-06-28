@@ -1,11 +1,7 @@
 import os
-import time
 
 import discord
-import random
-import asyncio
-
-from discord import Message, Status, TextChannel, VoiceState, VoiceChannel, Member
+from discord import TextChannel, VoiceState, VoiceChannel, Member
 
 TOKEN = os.getenv("TOKEN")
 text_channel_id = int(os.getenv("TEXT_CHANNEL_ID"))
