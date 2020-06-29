@@ -17,12 +17,6 @@ class MyBot(commands.Bot):
         print(self.user.id)
         print('------')
 
-    async def remind_gm_about_recording(self, text_channel, member):
-        await text_channel.send(f'Nie zapomnij o nagrywaniu, {member.mention}!')
-
-    async def remind_about_short_term_tasks(self, text_channel, member):
-        await text_channel.send(f"Nie zapomnij o celu krótkoterminowym, {member.mention}!")
-
     async def on_voice_state_update(self, member: Member, before: VoiceState, after: VoiceState):
         voice_channel: VoiceChannel = self.get_channel(self.config['REMINDER']['VOICE_CHANNEL_ID'])
         if voice_channel != after.channel:
@@ -30,9 +24,9 @@ class MyBot(commands.Bot):
         mg = self.get_user(self.config['REMINDER']['GM_ID'])
         text_channel: TextChannel = self.get_channel(self.config['REMINDER']['TEXT_CHANNEL_ID'])
         if mg == member:
-            await self.remind_gm_about_recording(text_channel, member)
+            await text_channel.send(f'Nie zapomnij o nagrywaniu, {member.mention}!')
         else:
-            await self.remind_about_short_term_tasks(text_channel, member)
+            await text_channel.send(f"Nie zapomnij o celu krótkoterminowym, {member.mention}!")
 
     async def send_message_to_text_channel(self, message):
         text_channel: TextChannel = self.get_channel(self.config['REMINDER']['TEXT_CHANNEL_ID'])
