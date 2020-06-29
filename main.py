@@ -40,10 +40,20 @@ class MyBot(commands.Bot):
         text_channel: TextChannel = self.get_channel(self.config['REMINDER']['TEXT_CHANNEL_ID'])
         await text_channel.send(message)
 
-def main():
-    config = toml.loads(Path("config.toml").read_text())
-    bot = MyBot('!', config=config)
-    bot.run(config['APP']['TOKEN'])
+
+config = toml.loads(Path("config.toml").read_text())
+bot = MyBot('!', config=config)
+
+
+@bot.command()
+@commands.is_owner()
+async def shutdown(ctx):
+    await ctx.bot.send_message_to_text_channel("Turning off")
+    await ctx.bot.logout()
+    await ctx.bot.close()
+
+
+bot.run(config['APP']['TOKEN'])
 
 
 if __name__ == '__main__':
