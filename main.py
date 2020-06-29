@@ -36,6 +36,9 @@ class MyBot(commands.Bot):
         else:
             await self.remind_about_short_term_tasks(after, member)
 
+    async def send_message_to_text_channel(self, message):
+        text_channel: TextChannel = self.get_channel(self.config['REMINDER']['TEXT_CHANNEL_ID'])
+        await text_channel.send(message)
 
 def main():
     config = toml.loads(Path("config.toml").read_text())
