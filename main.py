@@ -54,7 +54,3 @@ async def shutdown(ctx):
 
 
 bot.run(config['APP']['TOKEN'])
-
-
-if __name__ == '__main__':
-    main()
