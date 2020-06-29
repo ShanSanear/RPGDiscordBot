@@ -38,7 +38,7 @@ class MyBot(commands.Bot):
 
 
 def main():
-    config = toml.loads(Path("example_config.toml").read_text())
+    config = toml.loads(Path("config.toml").read_text())
     bot = MyBot('!', config=config)
     bot.run(config['APP']['TOKEN'])
 
