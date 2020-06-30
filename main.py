@@ -11,9 +11,9 @@ from music import Music
 
 class MyBot(commands.Bot):
 
-    def __init__(self, command_prefix, config):
+    def __init__(self, command_prefix, config_data):
         super(MyBot, self).__init__(command_prefix)
-        self.config = config
+        self._config = config_data
 
     async def on_ready(self):
         general_logger.info("Logged in as: %s [ID: %d]", self.user.name, self.user.id)
@@ -35,7 +35,7 @@ class MyBot(commands.Bot):
 
 
 config = toml.loads(Path("config.toml").read_text())
-bot = MyBot('!', config=config)
+bot = MyBot('!', config_data=config)
 
 
 @bot.command()
@@ -46,5 +46,12 @@ async def shutdown(ctx):
     await ctx.bot.close()
 
 
-bot.add_cog(Music(bot))
-bot.run(config['APP']['TOKEN'])
+def main():
+    create_loggers()
+    bot.add_cog(Music(bot))
+    bot.add_cog(DnD5Api(bot))
+    bot.run(config['APP']['TOKEN'])
+
+
+if __name__ == '__main__':
+    main()
