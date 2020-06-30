@@ -3,6 +3,8 @@ import asyncio
 import discord
 import youtube_dl as youtube_dl
 
+youtube_dl.utils.bug_reports_message = lambda: ''
+
 
 class YTDLSource(discord.PCMVolumeTransformer):
     _ytdl_format_options = {
