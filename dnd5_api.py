@@ -6,7 +6,6 @@ from discord.ext.commands import Bot
 
 from loggers import general_logger
 
-log = logging.getLogger(__name__)
 
 
 class DnD5Api(commands.Cog):
