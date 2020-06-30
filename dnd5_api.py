@@ -1,11 +1,7 @@
-import logging
-
-import discord
 from discord.ext import commands
 from discord.ext.commands import Bot
 
 from loggers import general_logger
-
 
 
 class DnD5Api(commands.Cog):
