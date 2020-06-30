@@ -50,28 +50,32 @@ class DnD5Api(commands.Cog):
         self.bot = bot
 
     @staticmethod
-    def format_spell_message(data, required_fields: Union[None, Tuple, List] = None):
+    def format_spell_message(data, fields_to_show: Union[None, Tuple, List] = None):
         fields = {'Name': data['name'],
                   'Description': '\n'.join(data['desc']),
                   "Components": ' '.join(data['components']),
                   "Range": data['range']}
         if "higher_level" in data:
-            fields["Higher level"] = '\n'.join(data['higher_level'])
+            fields["Higher_level"] = '\n'.join(data['higher_level'])
         message = "\n".join((f"**{key}** : {value}" for key, value in fields.items()
-                             if required_fields is None or key in required_fields)
+                             if fields_to_show is None or key in fields_to_show)
                             )
 
         return f"Found spell:\n{message}"
 
     @commands.command()
-    async def search(self, ctx, what_for, name, *required_fields):
-        if not required_fields:
-            required_fields = None
+    async def search(self, ctx, what_for, name, *fields_to_show):
+        """Searches for spell (for now) using it's name.
+        :param what_for - what are you searching for (for now - only spell)
+        :param name - name of the spell
+        :param fields_to_show - space separated fields to show: Name, Description, Components, Range, Higher_level"""
+        if not fields_to_show:
+            fields_to_show = None
         general_logger.debug("Searching for: %s using name: %s", what_for, name)
         async with ctx.typing():
             try:
                 data = Spell.get_spell(name)
-                await ctx.send(self.format_spell_message(data, required_fields=required_fields))
+                await ctx.send(self.format_spell_message(data, fields_to_show=fields_to_show))
                 # await ctx.send(json.dumps(data, indent=4))
             except SpellNotFound:
                 await ctx.send(f"Spell not found: {name}")
