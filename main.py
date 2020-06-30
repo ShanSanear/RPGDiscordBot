@@ -4,6 +4,8 @@ import toml
 from discord import TextChannel, VoiceState, VoiceChannel, Member
 from discord.ext import commands
 
+from music import Music
+
 
 class MyBot(commands.Bot):
 
@@ -45,4 +47,5 @@ async def shutdown(ctx):
     await ctx.bot.close()
 
 
+bot.add_cog(Music(bot))
 bot.run(config['APP']['TOKEN'])
