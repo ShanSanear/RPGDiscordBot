@@ -11,46 +11,64 @@ from urllib.parse import urljoin
 import requests
 
 
-class SpellNotFound(Exception):
+class ResourceNotFound(Exception):
     pass
 
 
-class Spell:
-    _base_api = "https://www.dnd5eapi.co/api/"
-    _spells_api = urljoin(_base_api, "spells/")
+class SpellNotFound(ResourceNotFound):
+    pass
 
-    @classmethod
-    def get_spell_by_index(cls, index):
-        url = urljoin(cls._spells_api, index)
+
+class Resource:
+    _base_api = "https://www.dnd5eapi.co/api/"
+
+    def __init__(self, name, api_subpath):
+        self.name = name
+        self._full_api_path = urljoin(self._base_api, api_subpath)
+
+    def _get_by_index(self, index):
+        url = urljoin(self._full_api_path, index)
         general_logger.debug("Url: %s", url)
         response = requests.get(url)
         response.raise_for_status()
         return response.json()
 
-    @classmethod
-    def get_spell(cls, name):
-        name_query = f"?name={name}"
-        url = urljoin(cls._spells_api, name_query)
+    def get_by_name(self):
+        name_query = f"?name={self.name}"
+        url = urljoin(self._full_api_path, name_query)
         general_logger.debug("Url: %s", url)
         response = requests.get(url)
         response.raise_for_status()
         returned = response.json()
         if returned['count'] == 1:
-            return cls.get_spell_by_index(returned['results'][0]['index'])
+            return self._get_by_index(returned['results'][0]['index'])
         elif returned['count'] > 1:
             names = {result['name']: result['index'] for result in returned['results']}
-            if name not in names:
-                raise SpellNotFound
-            return cls.get_spell_by_index(names[name])
-        raise SpellNotFound
+            if self.name not in names:
+                raise ResourceNotFound
+            return self._get_by_index(names[self.name])
+        raise ResourceNotFound
+
+
+class Spell(Resource):
+
+    def __init__(self, name):
+        super().__init__(name, api_subpath="spells/")
 
 
 class DnD5Api(commands.Cog):
+    _classes = {
+        "spell": Spell
+    }
+    _message = {
+        "spell": "Found spell:"
+    }
+
     def __init__(self, bot: Bot):
         self.bot = bot
 
     @staticmethod
-    def format_spell_message(data, fields_to_show: Union[None, Tuple, List] = None):
+    def format_message(start_of_the_message, data, fields_to_show: Union[None, Tuple, List] = None):
         fields = {'Name': data['name'],
                   'Description': '\n'.join(data['desc']),
                   "Components": ' '.join(data['components']),
@@ -61,7 +79,7 @@ class DnD5Api(commands.Cog):
                              if fields_to_show is None or key in fields_to_show)
                             )
 
-        return f"Found spell:\n{message}"
+        return f"{start_of_the_message}\n{message}"
 
     @commands.command()
     async def search(self, ctx, what_for, name, *fields_to_show):
@@ -69,13 +87,17 @@ class DnD5Api(commands.Cog):
         :param what_for - what are you searching for (for now - only spell)
         :param name - name of the spell
         :param fields_to_show - space separated fields to show: Name, Description, Components, Range, Higher_level"""
+        if what_for not in self._classes or what_for not in self._message:
+            raise NotImplementedError
         if not fields_to_show:
             fields_to_show = None
         general_logger.debug("Searching for: %s using name: %s", what_for, name)
         async with ctx.typing():
+            cls = self._classes[what_for]
+            msg = self._message[what_for]
             try:
-                data = Spell.get_spell(name)
-                await ctx.send(self.format_spell_message(data, fields_to_show=fields_to_show))
+                data = cls(name).get_by_name()
+                await ctx.send(self.format_message(msg, data, fields_to_show=fields_to_show))
                 # await ctx.send(json.dumps(data, indent=4))
-            except SpellNotFound:
+            except ResourceNotFound:
                 await ctx.send(f"Spell not found: {name}")
