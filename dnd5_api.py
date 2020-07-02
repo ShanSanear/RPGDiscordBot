@@ -22,7 +22,7 @@ class SpellNotFound(ResourceNotFound):
 class Resource:
     _base_api = "https://www.dnd5eapi.co/api/"
 
-    def __init__(self, name, api_subpath):
+    def __init__(self, name: str, api_subpath: str, fields_to_show: Tuple):
         self.name = name
         self._full_api_path = urljoin(self._base_api, api_subpath)
 
@@ -33,7 +33,7 @@ class Resource:
         response.raise_for_status()
         return response.json()
 
-    def get_by_name(self):
+    def fetch_by_name(self):
         name_query = f"?name={self.name}"
         url = urljoin(self._full_api_path, name_query)
         general_logger.debug("Url: %s", url)
@@ -52,8 +52,9 @@ class Resource:
 
 class Spell(Resource):
 
-    def __init__(self, name):
-        super().__init__(name, api_subpath="spells/")
+    def __init__(self, name:str, fields_to_show: Tuple):
+        super().__init__(name, api_subpath="spells/", fields_to_show=fields_to_show)
+
 
 
 class DnD5Api(commands.Cog):
@@ -66,6 +67,9 @@ class DnD5Api(commands.Cog):
 
     def __init__(self, bot: Bot):
         self.bot = bot
+
+    def get_formatted_message(self):
+        pass
 
     @staticmethod
     def format_message(start_of_the_message, data, fields_to_show: Union[None, Tuple, List] = None):
@@ -96,7 +100,8 @@ class DnD5Api(commands.Cog):
             cls = self._classes[what_for]
             msg = self._message[what_for]
             try:
-                data = cls(name).get_by_name()
+                cls(name, fields_to_show).fetch_by_name()
+                message = ""
                 await ctx.send(self.format_message(msg, data, fields_to_show=fields_to_show))
                 # await ctx.send(json.dumps(data, indent=4))
             except ResourceNotFound:
