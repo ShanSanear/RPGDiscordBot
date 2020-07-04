@@ -19,8 +19,14 @@ class MyBot(commands.Bot):
         general_logger.info("Logged in as: %s [ID: %d]", self.user.name, self.user.id)
 
     async def on_voice_state_update(self, member: Member, before: VoiceState, after: VoiceState):
+        if member.id in self._config['REMINDER']['BLACKLISTED_IDS']:
+            general_logger.debug("User %s is in black list for reminder", member)
+            return
         voice_channel: VoiceChannel = self.get_channel(self._config['REMINDER']['VOICE_CHANNEL_ID'])
         if voice_channel != after.channel:
+            return
+        if before.channel == after.channel:
+            general_logger.debug("User %s is in the same channel still, skipping", member)
             return
         mg = self.get_user(self._config['REMINDER']['GM_ID'])
         text_channel: TextChannel = self.get_channel(self._config['REMINDER']['TEXT_CHANNEL_ID'])
