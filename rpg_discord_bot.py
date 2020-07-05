@@ -1,3 +1,5 @@
+from typing import List
+
 from discord import TextChannel, Member, VoiceState, VoiceChannel
 from discord.ext import commands
 
@@ -9,10 +11,11 @@ class RPGDiscordBot(commands.Bot):
     def __init__(self, command_prefix, config_data):
         super(RPGDiscordBot, self).__init__(command_prefix)
         self._config = config_data
-        self._gm_id = self._config['REMINDER']['GM_ID']
-        self._blacklisted = self._config['REMINDER']['BLACKLISTED_IDS']
-        self._text_channel_id = self._config['REMINDER']['TEXT_CHANNEL_ID']
-        self._voice_channel_id = self._config['REMINDER']['VOICE_CHANNEL_ID']
+        self._gm_id: int = self._config['REMINDER']['GM_ID']
+        self._blacklisted: List[int] = self._config['REMINDER']['BLACKLISTED_IDS']
+        self._text_channel_id: int = self._config['REMINDER']['TEXT_CHANNEL_ID']
+        self._voice_channel_id: int = self._config['REMINDER']['VOICE_CHANNEL_ID']
+
 
     async def on_ready(self):
         general_logger.info("Logged in as: %s [ID: %d]", self.user.name, self.user.id)
@@ -32,8 +35,10 @@ class RPGDiscordBot(commands.Bot):
             general_logger.debug("User %s is in the same channel still, skipping", member)
             return
 
-        mg = self.get_user(self._gm_id)
-        if mg == member:
-            await self.send_message_to_text_channel(f'Nie zapomnij o nagrywaniu, {member.mention}!')
+        gm = self.get_user(self._gm_id)
+        if gm == member:
+            message = self._gm_message.format(mention=member.mention)
         else:
-            await self.send_message_to_text_channel(f"Nie zapomnij o celu krótkoterminowym, {member.mention}!")
+            message = self._others_message.format(mention=member.mention)
+
+        await self.send_message_to_text_channel(message)
