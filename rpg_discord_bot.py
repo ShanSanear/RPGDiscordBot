@@ -26,14 +26,14 @@ class RPGDiscordBot(commands.Bot):
         await text_channel.send(message)
 
     async def on_voice_state_update(self, member: Member, before: VoiceState, after: VoiceState):
-        if member.id in self._blacklisted:
-            general_logger.debug("User %s is in black list for reminder", member)
-            return
         voice_channel: VoiceChannel = self.get_channel(self._voice_channel_id)
         if voice_channel != after.channel:
             return
         if before.channel == after.channel:
             general_logger.debug("User %s is in the same channel still, skipping", member)
+            return
+        if member.id in self._blacklisted:
+            general_logger.debug("User %s is in black list for reminder", member)
             return
 
         gm = self.get_user(self._gm_id)
