@@ -12,8 +12,8 @@ class Music(commands.Cog):
     async def play(self, ctx, *, query):
         """Plays a file from the local filesystem"""
 
-        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query, executable=r'D:\ffmpeg\bin\ffmpeg.exe'))
-        ctx.voice_client.play(source, after=lambda e: print('Player error: %s' % e) if e else None)
+        source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
+        ctx.voice_client.play(source, after=lambda e: general_logger.error('Player error: %s', e) if e else None)
 
         await ctx.send('Now playing: {}'.format(query))
 
@@ -23,7 +23,7 @@ class Music(commands.Cog):
 
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop)
-            ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
+            ctx.voice_client.play(player, after=lambda e: general_logger.error('Player error: %s', e) if e else None)
 
         await ctx.send('Now playing: {}'.format(player.title))
 
@@ -33,7 +33,7 @@ class Music(commands.Cog):
 
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-            ctx.voice_client.play(player, after=lambda e: print('Player error: %s' % e) if e else None)
+            ctx.voice_client.play(player, after=lambda e: general_logger.error('Player error: %s', e) if e else None)
 
         await ctx.send('Now playing: {}'.format(player.title))
 
