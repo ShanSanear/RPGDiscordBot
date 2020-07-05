@@ -10,7 +10,7 @@ class Maintain(commands.Cog):
 
     @commands.command()
     async def join(self, ctx, *, channel: discord.VoiceChannel):
-        """Joins a voice channel"""
+        """Joins a specified voice channel"""
 
         if ctx.voice_client is not None:
             return await ctx.voice_client.move_to(channel)
@@ -20,6 +20,7 @@ class Maintain(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def shutdown(self, ctx):
+        """Shuts down bot"""
         await self.bot.send_message_to_text_channel("Turning off")
         await ctx.bot.logout()
         await ctx.bot.close()
