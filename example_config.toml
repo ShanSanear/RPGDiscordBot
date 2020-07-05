@@ -2,7 +2,7 @@
 TOKEN = "EXAMPLE_TOKEN"
 
 [REMINDER]
-GM_ID = 111
-BLACKLISTED_IDS = [222]
-TEXT_CHANNEL_ID = 111
-VOICE_CHANNEL_ID = 111
+GM_ID = 111 # Game master discord ID, for different reminder type
+BLACKLISTED_IDS = [222] # List of IDs that won't get those notifications
+TEXT_CHANNEL_ID = 111 # Text channel ID that will have these notifications send to
+VOICE_CHANNEL_ID = 111 # Voice channel monitored for notification
