@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
+from discord.ext.commands import Context
 
+from loggers import general_logger
 from ytdl_source import YTDLSource
 
 
@@ -25,7 +27,7 @@ class Music(commands.Cog):
             player = await YTDLSource.from_url(url, loop=self.bot.loop)
             ctx.voice_client.play(player, after=lambda e: general_logger.error('Player error: %s', e) if e else None)
 
-        await ctx.send('Now playing: {}'.format(player.title))
+        await ctx.send('Now playing: {} from: {}'.format(player.title, player.url))
 
     @commands.command()
     async def stream(self, ctx, *, url):
@@ -35,7 +37,7 @@ class Music(commands.Cog):
             player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
             ctx.voice_client.play(player, after=lambda e: general_logger.error('Player error: %s', e) if e else None)
 
-        await ctx.send('Now playing: {}'.format(player.title))
+        await ctx.send('Now playing: {} from: {}'.format(player.title, player.url))
 
     @commands.command()
     async def volume(self, ctx, volume: int):
@@ -48,10 +50,14 @@ class Music(commands.Cog):
         await ctx.send("Changed volume to {}%".format(volume))
 
     @commands.command()
-    async def stop(self, ctx):
+    async def stop(self, ctx: Context):
         """Stops and disconnects the bot from voice"""
-
-        await ctx.voice_client.disconnect()
+        if ctx.voice_client is None:
+            await ctx.channel.send("Nothing is being played right now")
+        if ctx.voice_client.is_playing():
+            ctx.voice_client.stop()
+        else:
+            await ctx.channel.send("Nothing is being played right now")
 
     @play.before_invoke
     @yt.before_invoke
@@ -59,11 +65,10 @@ class Music(commands.Cog):
     async def ensure_voice(self, ctx):
         if ctx.voice_client is None:
             if ctx.author.voice:
+                general_logger.debug("Joining authors voice channel")
                 await ctx.author.voice.channel.connect()
             else:
                 await ctx.send("You are not connected to a voice channel.")
                 raise commands.CommandError("Author not connected to a voice channel.")
         elif ctx.voice_client.is_playing():
             ctx.voice_client.stop()
-
-
