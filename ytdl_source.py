@@ -41,5 +41,5 @@ class YTDLSource(discord.PCMVolumeTransformer):
             data = data['entries'][0]
 
         filename = data['url'] if stream else cls.ytdl.prepare_filename(data)
-        return cls(discord.FFmpegPCMAudio(filename, **cls.ffmpeg_options, executable=r'D:\ffmpeg\bin\ffmpeg.exe'),
+        return cls(discord.FFmpegPCMAudio(filename, **cls.ffmpeg_options),
                    data=data)
