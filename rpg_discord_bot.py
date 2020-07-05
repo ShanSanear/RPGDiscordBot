@@ -15,7 +15,8 @@ class RPGDiscordBot(commands.Bot):
         self._blacklisted: List[int] = self._config['REMINDER']['BLACKLISTED_IDS']
         self._text_channel_id: int = self._config['REMINDER']['TEXT_CHANNEL_ID']
         self._voice_channel_id: int = self._config['REMINDER']['VOICE_CHANNEL_ID']
-
+        self._gm_message: str = self._config['REMINDER']['GM_MESSAGE']
+        self._others_message: str = self._config['REMINDER']['OTHERS_MESSAGE']
 
     async def on_ready(self):
         general_logger.info("Logged in as: %s [ID: %d]", self.user.name, self.user.id)
