@@ -1,5 +1,7 @@
 import discord
+from discord import VoiceClient
 from discord.ext import commands
+from discord.ext.commands import Context
 
 from rpg_discord_bot import RPGDiscordBot
 
@@ -16,6 +18,15 @@ class Maintain(commands.Cog):
             return await ctx.voice_client.move_to(channel)
 
         await channel.connect()
+
+    @commands.command()
+    async def disconnect(self, ctx: Context):
+        """Disconnects from currently connected voice channel"""
+
+        if ctx.voice_client is None:
+            return await ctx.send("Not connected to any voice channel at the momend")
+
+        await ctx.voice_client.disconnect()
 
     @commands.command()
     @commands.is_owner()
