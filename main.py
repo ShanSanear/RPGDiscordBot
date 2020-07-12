@@ -11,7 +11,7 @@ from maintain import Maintain
 
 def main():
     create_loggers()
-    config = toml.loads(Path("config.toml").read_text())
+    config = toml.loads(Path("config.toml").read_text(encoding='utf-8'))
     bot = RPGDiscordBot('!', config_data=config)
     bot.add_cog(Music(bot))
     bot.add_cog(DnD5Api(bot))
