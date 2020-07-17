@@ -7,5 +7,5 @@ class ResourceNotFound(Exception):
     pass
 
 
-class SpellNotFound(ResourceNotFound):
+class NotExactMatch(ResourceNotFound):
     pass
