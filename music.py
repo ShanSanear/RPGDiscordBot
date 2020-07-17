@@ -15,9 +15,12 @@ class Music(commands.Cog):
         """Plays a file from the local filesystem"""
 
         source = discord.PCMVolumeTransformer(discord.FFmpegPCMAudio(query))
-        ctx.voice_client.play(source, after=lambda e: general_logger.error('Player error: %s', e) if e else None)
+        ctx.voice_client.play(
+            source,
+            after=lambda e: general_logger.error("Player error: %s", e) if e else None,
+        )
 
-        await ctx.send('Now playing: {}'.format(query))
+        await ctx.send("Now playing: {}".format(query))
 
     @commands.command()
     async def yt(self, ctx, *, url):
@@ -25,9 +28,14 @@ class Music(commands.Cog):
 
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop)
-            ctx.voice_client.play(player, after=lambda e: general_logger.error('Player error: %s', e) if e else None)
+            ctx.voice_client.play(
+                player,
+                after=lambda e: general_logger.error("Player error: %s", e)
+                if e
+                else None,
+            )
 
-        await ctx.send('Now playing: {} from: {}'.format(player.title, player.url))
+        await ctx.send("Now playing: {} from: {}".format(player.title, player.url))
 
     @commands.command()
     async def stream(self, ctx, *, url):
@@ -35,9 +43,14 @@ class Music(commands.Cog):
 
         async with ctx.typing():
             player = await YTDLSource.from_url(url, loop=self.bot.loop, stream=True)
-            ctx.voice_client.play(player, after=lambda e: general_logger.error('Player error: %s', e) if e else None)
+            ctx.voice_client.play(
+                player,
+                after=lambda e: general_logger.error("Player error: %s", e)
+                if e
+                else None,
+            )
 
-        await ctx.send('Now playing: {} from: {}'.format(player.title, player.url))
+        await ctx.send("Now playing: {} from: {}".format(player.title, player.url))
 
     @commands.command()
     async def volume(self, ctx, volume: int):

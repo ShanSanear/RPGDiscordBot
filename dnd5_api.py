@@ -33,10 +33,10 @@ class Resource:
         response = requests.get(url)
         response.raise_for_status()
         returned = response.json()
-        if returned['count'] == 1:
-            self.response_data = self._get_by_index(returned['results'][0]['index'])
-        elif returned['count'] > 1:
-            names = {result['name']: result['index'] for result in returned['results']}
+        if returned["count"] == 1:
+            self.response_data = self._get_by_index(returned["results"][0]["index"])
+        elif returned["count"] > 1:
+            names = {result["name"]: result["index"] for result in returned["results"]}
             if self.name not in names:
                 raise ResourceNotFound
             self.response_data = self._get_by_index(names[self.name])
@@ -59,30 +59,33 @@ class Spell(Resource):
         self.start_of_the_message = "Found spell:"
 
     def get_formatted_message(self, fields_to_show):
-        fields = {'Name': self.response_data['name'],
-                  "Description": '\n'.join(self.response_data['desc']),
-                  "Level": self.response_data['level'],
-                  "Components": ' '.join(self.response_data['components']),
-                  "Range": self.response_data['range'],
-                  "Ritual": self.response_data['ritual'],
-                  "Duration": self.response_data['duration'],
-                  "Casting time": self.response_data['casting_time'],
-                  "School": self.response_data['school']['name'],
-                  "Classes": ','.join((cls['name'] for cls in self.response_data['classes']))
-                  }
+        fields = {
+            "Name": self.response_data["name"],
+            "Description": "\n".join(self.response_data["desc"]),
+            "Level": self.response_data["level"],
+            "Components": " ".join(self.response_data["components"]),
+            "Range": self.response_data["range"],
+            "Ritual": self.response_data["ritual"],
+            "Duration": self.response_data["duration"],
+            "Casting time": self.response_data["casting_time"],
+            "School": self.response_data["school"]["name"],
+            "Classes": ",".join((cls["name"] for cls in self.response_data["classes"])),
+        }
         if "higher_level" in self.response_data:
-            fields["Higher_level"] = '\n'.join(self.response_data['higher_level'])
-        message = "\n".join((f"**{key}** : {value}" for key, value in fields.items()
-                             if fields_to_show is None or key in fields_to_show)
-                            )
+            fields["Higher_level"] = "\n".join(self.response_data["higher_level"])
+        message = "\n".join(
+            (
+                f"**{key}** : {value}"
+                for key, value in fields.items()
+                if fields_to_show is None or key in fields_to_show
+            )
+        )
 
         return f"{self.start_of_the_message}\n{message}"
 
 
 class DnD5Api(commands.Cog):
-    _classes = {
-        "spell": Spell
-    }
+    _classes = {"spell": Spell}
 
     def __init__(self, bot: Bot):
         self.bot = bot
