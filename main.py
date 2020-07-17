@@ -11,13 +11,13 @@ from maintain import Maintain
 
 def main():
     create_loggers()
-    config = toml.loads(Path("config.toml").read_text(encoding='utf-8'))
-    bot = RPGDiscordBot('!', config_data=config)
+    config = toml.loads(Path("config.toml").read_text(encoding="utf-8"))
+    bot = RPGDiscordBot("!", config_data=config)
     bot.add_cog(Music(bot))
     bot.add_cog(DnD5Api(bot))
     bot.add_cog(Maintain(bot))
-    bot.run(config['APP']['TOKEN'])
+    bot.run(config["APP"]["TOKEN"])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
