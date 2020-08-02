@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import discord
 from discord import VoiceClient
 from discord.ext import commands
@@ -35,3 +37,10 @@ class Maintain(commands.Cog):
         await self.bot.send_message_to_text_channel("Turning off")
         await ctx.bot.logout()
         await ctx.bot.close()
+
+    @commands.command()
+    @commands.is_owner()
+    async def clear_today_messages(self, ctx: Context, number):
+        number = int(number)
+        ctx.channel.purge(limit=number, check=lambda message: message.author == self.bot.user,
+                          before=datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0))
