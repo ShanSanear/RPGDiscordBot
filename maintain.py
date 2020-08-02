@@ -1,10 +1,11 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import discord
 from discord import VoiceClient
 from discord.ext import commands
 from discord.ext.commands import Context
 
+from loggers import general_logger
 from rpg_discord_bot import RPGDiscordBot
 
 
@@ -42,5 +43,7 @@ class Maintain(commands.Cog):
     @commands.is_owner()
     async def clear_today_messages(self, ctx: Context, number):
         number = int(number)
+        last_24_hours = datetime.utcnow() - timedelta(days=1)
+        general_logger.info("Clearing messages from channel: %s since: %s", ctx.channel, last_24_hours)
         await ctx.channel.purge(limit=number, check=lambda message: message.author == self.bot.user,
-                          before=datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0))
+                                before=last_24_hours)
