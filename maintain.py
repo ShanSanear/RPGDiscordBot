@@ -42,5 +42,5 @@ class Maintain(commands.Cog):
     @commands.is_owner()
     async def clear_today_messages(self, ctx: Context, number):
         number = int(number)
-        ctx.channel.purge(limit=number, check=lambda message: message.author == self.bot.user,
+        await ctx.channel.purge(limit=number, check=lambda message: message.author == self.bot.user,
                           before=datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0))
