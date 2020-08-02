@@ -45,5 +45,10 @@ class Maintain(commands.Cog):
         number = int(number)
         last_24_hours = datetime.utcnow() - timedelta(days=1)
         general_logger.info("Clearing messages from channel: %s since: %s", ctx.channel, last_24_hours)
-        await ctx.channel.purge(limit=number, check=lambda message: message.author == self.bot.user,
-                                before=last_24_hours)
+        await ctx.channel.purge(limit=number, check=self.check_for_author,
+                                after=last_24_hours)
+
+    def check_for_author(self, message):
+        general_logger.debug("Message: %s, author: %s", message, message.author)
+        return message.author == self.bot.user
+
