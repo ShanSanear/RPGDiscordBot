@@ -4,6 +4,15 @@ import sys
 general_logger = logging.getLogger("general_logger")
 
 
+def custom_exception_logging(exctype, value, traceback):
+    general_logger.exception('Exception type: %s', exctype)
+    general_logger.exception('Exception Value: %s', value)
+    general_logger.exception('Exception traceback: %s', traceback)
+
+
+sys.excepthook = custom_exception_logging
+
+
 def create_loggers(level=logging.DEBUG):
     stream_handler = logging.StreamHandler()
     formatter = logging.Formatter(
