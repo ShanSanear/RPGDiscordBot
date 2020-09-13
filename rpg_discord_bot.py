@@ -1,6 +1,7 @@
+from datetime import datetime, timedelta
 from typing import List
 
-from discord import TextChannel, Member, VoiceState, VoiceChannel
+from discord import TextChannel, Member, VoiceState, VoiceChannel, Message
 from discord.ext import commands
 
 from loggers import general_logger
@@ -20,8 +21,14 @@ class RPGDiscordBot(commands.Bot):
     async def on_ready(self):
         general_logger.info("Logged in as: %s [ID: %d]", self.user.name, self.user.id)
 
-    async def send_message_to_text_channel(self, message):
+    async def send_reminder_to_text_channel(self, message):
         text_channel: TextChannel = self.get_channel(self._text_channel_id)
+        last_12_hours = datetime.utcnow() - timedelta(hours=12)
+        last_messages = await text_channel.history(after=last_12_hours).flatten()
+        last_messages = (message.content for message in last_messages)
+        if message in last_messages:
+            general_logger.debug("Message %s appeared in the last 12 hours, skipping", message)
+            return
         await text_channel.send(message)
 
     async def on_voice_state_update(
@@ -45,4 +52,4 @@ class RPGDiscordBot(commands.Bot):
         else:
             message = self._others_message.format(mention=member.mention)
 
-        await self.send_message_to_text_channel(message)
+        await self.send_reminder_to_text_channel(message)
