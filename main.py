@@ -6,7 +6,7 @@ from loggers import create_loggers
 from rpg_discord_bot import RPGDiscordBot
 from dnd5_api import DnD5Api
 from music import Music
-from maintain import Maintain
+from maintain import Maintain, CommandErrorHandler
 
 
 def main():
@@ -16,6 +16,7 @@ def main():
     bot.add_cog(Music(bot))
     bot.add_cog(DnD5Api(bot))
     bot.add_cog(Maintain(bot))
+    bot.add_cog(CommandErrorHandler(bot))
     bot.run(config["APP"]["TOKEN"])
 
 

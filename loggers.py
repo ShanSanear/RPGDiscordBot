@@ -1,17 +1,9 @@
 import logging
+import os
 import sys
 from logging.handlers import RotatingFileHandler
 
 general_logger = logging.getLogger("general_logger")
-
-
-def custom_exception_logging(exctype, value, traceback):
-    general_logger.exception('Exception type: %s', exctype)
-    general_logger.exception('Exception Value: %s', value)
-    general_logger.exception('Exception traceback: %s', traceback)
-
-
-sys.excepthook = custom_exception_logging
 
 
 def create_loggers(level=logging.DEBUG):
@@ -20,7 +12,8 @@ def create_loggers(level=logging.DEBUG):
         "[%(asctime)s]:[%(name)-12s] [%(levelname).1s]: %(message)s",
         datefmt="%Y-%m-%d %H:%M:%S",
     )
-    file_handler = RotatingFileHandler(filename='RPGDiscordBot.log', mode='a', maxBytes=10240, backupCount=5)
+    file_handler = RotatingFileHandler(filename=os.getenv("LOG_FILE", "RPGDiscordBot.log"), mode='a',
+                                       maxBytes=10240, backupCount=5)
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(formatter)
     general_logger.addHandler(file_handler)
