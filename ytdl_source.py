@@ -36,7 +36,14 @@ class YTDLSource(discord.PCMVolumeTransformer):
         self.url = data.get('url')
 
     @classmethod
-    async def from_url(cls, url, *, loop=None, stream=False):
+    async def from_url(cls, url: str, *, loop=None, stream=False):
+        """
+        Downloading from YT.
+        :param url: Url to stream/download from
+        :param loop: What kind of loop interface should be used
+        :param stream: if this is stream or download
+        :return: Player object
+        """
         loop = loop or asyncio.get_event_loop()
         data = await loop.run_in_executor(None, lambda: cls.yt_downloader.extract_info(url, download=not stream))
 
