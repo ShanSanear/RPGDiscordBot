@@ -1,24 +1,30 @@
 import random
 import re
-from collections import defaultdict
 from typing import List
 
-import discord
 from discord.ext import commands
 
 import loggers
 from rpg_discord_bot import RPGDiscordBot
 
-ROLL_RE = re.compile("(?P<NumberOfDices>\d+)[dkDK](?P<DiceSize>\d+)")
+ROLL_RE = re.compile(r"(?P<NumberOfDices>\d+)[dkDK](?P<DiceSize>\d+)")
 
 
 class Roller(commands.Cog):
+    """
+    Simple roller Cog
+    """
     def __init__(self, bot: RPGDiscordBot):
+        """
+        Constructor
+        :param bot: RPGDiscordBot instance
+        """
         self.bot = bot
 
     @commands.command()
     async def roll(self, ctx: commands.Context, *rolls_to_roll):
-        """Roll specified rolls
+        """
+        Roll specified rolls
         :param ctx: Context
         :param rolls_to_roll Rolls to roll in format of NumberOfDices[dk]DiceSize, can provide multiple rolls split using spaces
         """
