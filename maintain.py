@@ -3,6 +3,7 @@ import traceback
 from datetime import datetime, timedelta
 
 import discord
+from discord import Member, TextChannel
 from discord.ext import commands
 from discord.ext.commands import Context
 
@@ -13,6 +14,7 @@ from rpg_discord_bot import RPGDiscordBot
 class Maintain(commands.Cog):
     def __init__(self, bot: RPGDiscordBot):
         self.bot = bot
+        self._users_to_be_followed = {}
 
     @commands.command()
     async def join(self, ctx, *, channel: discord.VoiceChannel):
@@ -52,6 +54,11 @@ class Maintain(commands.Cog):
     def check_for_author(self, message):
         general_logger.debug("Message: %s, author: %s", message, message.author)
         return message.author == self.bot.user
+
+    @commands.command()
+    async def follow_another_user(self, ctx, user_to_be_followed: Member, user_following: Member):
+        general_logger.debug("User to be followed: %s, User following: %s", user_to_be_followed, user_following)
+        await ctx.send("Following...")
 
 
 class CommandErrorHandler(commands.Cog):
