@@ -3,11 +3,20 @@ from discord.ext import commands
 from discord.ext.commands import Context
 
 from loggers import general_logger
+from rpg_discord_bot import RPGDiscordBot
 from ytdl_source import YTDLSource
 
 
 class Music(commands.Cog):
-    def __init__(self, bot):
+    """
+    Simple Cog which lets bot play music.
+    """
+
+    def __init__(self, bot: RPGDiscordBot):
+        """
+        Constructor.
+        :param bot: RPGDiscordBot instance
+        """
         self.bot = bot
 
     @commands.command()
@@ -75,7 +84,11 @@ class Music(commands.Cog):
     @play.before_invoke
     @yt.before_invoke
     @stream.before_invoke
-    async def ensure_voice(self, ctx):
+    async def ensure_voice(self, ctx: Context):
+        """
+        Check to make sure bot is in some voice channel before playing anything.
+        :param ctx: Context.
+        """
         if ctx.voice_client is None:
             if ctx.author.voice:
                 general_logger.debug("Joining authors voice channel")
