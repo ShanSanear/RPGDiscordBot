@@ -2,11 +2,15 @@ import asyncio
 
 import discord
 import youtube_dl as youtube_dl
+from discord import AudioSource
 
 youtube_dl.utils.bug_reports_message = lambda: ''
 
 
 class YTDLSource(discord.PCMVolumeTransformer):
+    """
+    Class handling downloading music from YT.
+    """
     _ytdl_format_options = {
         'format': 'bestaudio/best',
         'outtmpl': '%(extractor)s-%(id)s-%(title)s.%(ext)s',
@@ -23,9 +27,9 @@ class YTDLSource(discord.PCMVolumeTransformer):
     ffmpeg_options = {
         'options': '-vn'
     }
-    ytdl = youtube_dl.YoutubeDL(_ytdl_format_options)
+    yt_downloader = youtube_dl.YoutubeDL(_ytdl_format_options)
 
-    def __init__(self, source, *, data, volume=0.5):
+    def __init__(self, source: AudioSource, *, data: dict, volume: float = 0.5):
         super().__init__(source, volume)
         self.data = data
         self.title = data.get('title')
@@ -34,12 +38,12 @@ class YTDLSource(discord.PCMVolumeTransformer):
     @classmethod
     async def from_url(cls, url, *, loop=None, stream=False):
         loop = loop or asyncio.get_event_loop()
-        data = await loop.run_in_executor(None, lambda: cls.ytdl.extract_info(url, download=not stream))
+        data = await loop.run_in_executor(None, lambda: cls.yt_downloader.extract_info(url, download=not stream))
 
         if 'entries' in data:
             # take first item from a playlist
             data = data['entries'][0]
 
-        filename = data['url'] if stream else cls.ytdl.prepare_filename(data)
+        filename = data['url'] if stream else cls.yt_downloader.prepare_filename(data)
         return cls(discord.FFmpegPCMAudio(filename, **cls.ffmpeg_options),
                    data=data)
