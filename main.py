@@ -3,6 +3,7 @@ from pathlib import Path
 import toml
 
 from loggers import create_loggers
+from roller import Roller
 from rpg_discord_bot import RPGDiscordBot
 from dnd5_api import DnD5Api
 from music import Music
@@ -17,6 +18,7 @@ def main():
     bot.add_cog(DnD5Api(bot))
     bot.add_cog(Maintain(bot))
     bot.add_cog(CommandErrorHandler(bot))
+    bot.add_cog(Roller(bot))
     bot.run(config["APP"]["TOKEN"])
 
 
