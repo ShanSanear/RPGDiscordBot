@@ -1,12 +1,15 @@
 import logging
 import os
-import sys
 from logging.handlers import RotatingFileHandler
 
 general_logger = logging.getLogger("general_logger")
 
 
 def create_loggers(level=logging.DEBUG):
+    """
+    Creates loggers.
+    :param level: Level by which to create logger.
+    """
     stream_handler = logging.StreamHandler()
     formatter = logging.Formatter(
         "[%(asctime)s]:[%(name)-12s] [%(levelname).1s]: %(message)s",
