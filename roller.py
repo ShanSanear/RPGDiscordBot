@@ -31,8 +31,10 @@ class Roller(commands.Cog):
                 continue
             number_of_dices = int(to_be_rolled.group('NumberOfDices'))
             dice_size = int(to_be_rolled.group('DiceSize'))
-            current_roll_results = random.randint(number_of_dices, dice_size * number_of_dices + 1)
-            roll_results.append((to_be_rolled.group(0), current_roll_results))
+            current_roll_result = random.randint(number_of_dices, dice_size * number_of_dices + 1)
+            roll_results.append((to_be_rolled.group(0), current_roll_result))
+
+        loggers.general_logger.debug("Roll results: %s", roll_results)
 
         rolls_with_values = []
         final_value = 0
