@@ -58,6 +58,12 @@ class RPGDiscordBot(commands.Bot):
         await self.process_following(member, before, after)
 
     async def send_reminder(self, member: Member, before: VoiceState, after: VoiceState):
+        """
+        Send reminder about message provided earlier.
+        :param member: member which is being affected by voice state change
+        :param before: state before update
+        :param after: state after update
+        """
         voice_channel: VoiceChannel = self.get_channel(self._voice_channel_id)
         if voice_channel != after.channel:
             return
@@ -78,10 +84,21 @@ class RPGDiscordBot(commands.Bot):
 
         await self.send_reminder_to_text_channel(message)
 
-    def add_user_to_be_followed(self, being_followed, following):
+    def add_user_to_be_followed(self, being_followed: Member, following: Member):
+        """
+        Makes user be followed by another user
+        :param being_followed: User that is to be followed
+        :param following: User that will be following
+        """
         self._following_mapping[being_followed].add(following)
 
     async def process_following(self, member: Member, before: VoiceState, after: VoiceState):
+        """
+        Processes following mapping - in case user changes its voice channel
+        :param member: User that voice change was happening for
+        :param before: Before state of the user
+        :param after: After state of the user
+        """
         if member not in self._following_mapping:
             general_logger.debug("Member changed: %s is not in following mapping", member)
             return
