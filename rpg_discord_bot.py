@@ -111,7 +111,6 @@ class RPGDiscordBot(commands.Bot):
             else:
                 follower_voice_channel = None
             if follower_voice_channel != being_followed_voice_channel:
+                general_logger.info("Moving %s to follow %s into channel '%s'",
+                                    follower, member, being_followed_voice_channel)
                 await follower.move_to(being_followed_voice_channel, reason="Following...")
-
-
-
