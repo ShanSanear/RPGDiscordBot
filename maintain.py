@@ -73,7 +73,7 @@ class Maintain(commands.Cog):
         return message.author == self.bot.user
 
     @commands.command()
-    async def follow_another_user(self, ctx, user_to_be_followed: Member, user_following: Member):
+    async def follow_another_user(self, ctx: Context, user_to_be_followed: Member, user_following: Member):
         """
         TODO:
         Command which saves information about which user should follow who in voice channels
@@ -83,7 +83,8 @@ class Maintain(commands.Cog):
         :return:
         """
         general_logger.debug("User to be followed: %s, User following: %s", user_to_be_followed, user_following)
-        await ctx.send("Following...")
+        await ctx.send(f"User to be followed: {user_to_be_followed}, User following: {user_following}")
+        self.bot.add_user_to_be_followed(user_to_be_followed, user_following)
 
 
 class CommandErrorHandler(commands.Cog):

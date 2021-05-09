@@ -1,5 +1,6 @@
+from collections import defaultdict
 from datetime import datetime, timedelta
-from typing import List, Iterator
+from typing import List, Iterator, Dict, Set
 
 from discord import TextChannel, Member, VoiceState, VoiceChannel, Message
 from discord.ext import commands
@@ -22,6 +23,7 @@ class RPGDiscordBot(commands.Bot):
         self._voice_channel_id: int = self._config["REMINDER"]["VOICE_CHANNEL_ID"]
         self._gm_message: str = self._config["REMINDER"]["GM_MESSAGE"]
         self._others_message: str = self._config["REMINDER"]["OTHERS_MESSAGE"]
+        self._following_mapping: Dict[Member, Set[Member]] = defaultdict(set)
 
     async def on_ready(self):
         """
@@ -44,7 +46,7 @@ class RPGDiscordBot(commands.Bot):
         await text_channel.send(message)
 
     async def on_voice_state_update(
-        self, member: Member, before: VoiceState, after: VoiceState
+            self, member: Member, before: VoiceState, after: VoiceState
     ):
         """
         Being run on voice state update being detected
@@ -52,6 +54,10 @@ class RPGDiscordBot(commands.Bot):
         :param before: state before update
         :param after: state after update
         """
+        await self.send_reminder(member, before, after)
+        await self.process_following(member, before, after)
+
+    async def send_reminder(self, member: Member, before: VoiceState, after: VoiceState):
         voice_channel: VoiceChannel = self.get_channel(self._voice_channel_id)
         if voice_channel != after.channel:
             return
@@ -71,3 +77,24 @@ class RPGDiscordBot(commands.Bot):
             message = self._others_message.format(mention=member.mention)
 
         await self.send_reminder_to_text_channel(message)
+
+    def add_user_to_be_followed(self, being_followed, following):
+        self._following_mapping[being_followed].add(following)
+
+    async def process_following(self, member: Member, before: VoiceState, after: VoiceState):
+        if member not in self._following_mapping:
+            general_logger.debug("Member changed: %s is not in following mapping", member)
+            return
+        if before.channel == after.channel:
+            return
+        being_followed_voice_channel = after.channel
+        for follower in self._following_mapping[member]:
+            if follower.voice:
+                follower_voice_channel = follower.voice.channel
+            else:
+                follower_voice_channel = None
+            if follower_voice_channel != being_followed_voice_channel:
+                await follower.move_to(being_followed_voice_channel, reason="Following...")
+
+
+
