@@ -16,7 +16,7 @@ def create_loggers(level=logging.DEBUG):
         datefmt="%Y-%m-%d %H:%M:%S",
     )
     file_handler = RotatingFileHandler(filename=os.getenv("LOG_FILE", "RPGDiscordBot.log"), mode='a',
-                                       maxBytes=10240, backupCount=5)
+                                       maxBytes=10240, backupCount=5, encoding='utf-8')
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(formatter)
     general_logger.addHandler(file_handler)
