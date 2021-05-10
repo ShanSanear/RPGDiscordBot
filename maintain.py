@@ -3,7 +3,7 @@ import traceback
 from datetime import datetime, timedelta
 
 import discord
-from discord import Member, TextChannel, Message
+from discord import Member, Message
 from discord.ext import commands
 from discord.ext.commands import Context
 
@@ -15,6 +15,7 @@ class Maintain(commands.Cog):
     """
     Cog which handles simple maintain tasks (such as joining channel, disconnecting etc)
     """
+
     def __init__(self, bot: RPGDiscordBot):
         """
         Constructor
@@ -84,11 +85,34 @@ class Maintain(commands.Cog):
         await ctx.send(f"User to be followed: {user_to_be_followed}, User following: {user_following}")
         self.bot.add_user_to_be_followed(user_to_be_followed, user_following)
 
+    @commands.command()
+    async def stop_follow_another_user(self, ctx: Context, user_being_followed: Member, user_following: Member):
+        """
+        Stops user from being followed
+        :param ctx: Message context
+        :param user_being_followed: Who is being currently followed
+        :param user_following: Who is following
+        """
+        general_logger.debug("User being followed: %s, User that will no longer follow: %s", user_being_followed,
+                             user_following)
+        await ctx.send(f"User {user_being_followed} will no longer be followed by {user_following}")
+        self.bot.disable_following_of_user(user_being_followed, user_following)
+
+    @commands.command()
+    async def show_current_followers(self, ctx: Context):
+        """
+        Shows who is followed by who.
+        :param ctx: Message context
+        """
+        for being_followed, followers in self.bot.following_mapping.items():
+            await ctx.send(f"{being_followed} is being followed by {','.join(str(follower) for follower in followers)}")
+
 
 class CommandErrorHandler(commands.Cog):
     """
     Makes it easier to handle command errors.
     """
+
     def __init__(self, bot):
         """
         Constructor
