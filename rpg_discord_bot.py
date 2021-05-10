@@ -2,7 +2,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import List, Iterator, Dict, Set
 
-from discord import TextChannel, Member, VoiceState, VoiceChannel, Message
+from discord import TextChannel, Member, VoiceState, VoiceChannel, Message, Status
 from discord.ext import commands
 
 from loggers import general_logger
@@ -30,6 +30,10 @@ class RPGDiscordBot(commands.Bot):
         Logging information when on_ready event is being called
         """
         general_logger.info("Logged in as: %s [ID: %d]", self.user.name, self.user.id)
+
+    @property
+    def following_mapping(self):
+        return self._following_mapping
 
     async def send_reminder_to_text_channel(self, message: str):
         """
@@ -92,6 +96,14 @@ class RPGDiscordBot(commands.Bot):
         """
         self._following_mapping[being_followed].add(following)
 
+    def disable_following_of_user(self, being_followed: Member, following: Member):
+        """
+        Disables user being followed by another one
+        :param being_followed: User that is being followed
+        :param following: User that is following
+        """
+        self._following_mapping[being_followed].remove(following)
+
     async def process_following(self, member: Member, before: VoiceState, after: VoiceState):
         """
         Processes following mapping - in case user changes its voice channel
@@ -106,11 +118,11 @@ class RPGDiscordBot(commands.Bot):
             return
         being_followed_voice_channel = after.channel
         for follower in self._following_mapping[member]:
-            if follower.voice:
-                follower_voice_channel = follower.voice.channel
-            else:
-                follower_voice_channel = None
-            if follower_voice_channel != being_followed_voice_channel:
+            if follower.status == Status.offline:
+                continue
+            if not follower.voice:
+                continue
+            if follower.voice.channel != being_followed_voice_channel:
                 general_logger.info("Moving %s to follow %s into channel '%s'",
                                     follower, member, being_followed_voice_channel)
                 await follower.move_to(being_followed_voice_channel, reason="Following...")
