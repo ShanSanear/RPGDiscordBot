@@ -47,7 +47,7 @@ class Music(commands.Cog):
         await ctx.send("Now playing: {} from: {}".format(player.title, player.url))
 
     @commands.command()
-    async def stream(self, ctx, *, url):
+    async def stream_music(self, ctx, *, url):
         """Streams from a url (same as yt, but doesn't predownload)"""
 
         async with ctx.typing():
@@ -83,7 +83,7 @@ class Music(commands.Cog):
 
     @play.before_invoke
     @yt.before_invoke
-    @stream.before_invoke
+    @stream_music.before_invoke
     async def ensure_voice(self, ctx: Context):
         """
         Check to make sure bot is in some voice channel before playing anything.
