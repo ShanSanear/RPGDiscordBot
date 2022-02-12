@@ -8,3 +8,7 @@ TEXT_CHANNEL_ID = 111 # Text channel ID that will have these notifications send 
 VOICE_CHANNEL_ID = 111 # Voice channel monitored for notification
 GM_MESSAGE = "This is GM mesage with mention - {mention}!"
 OTHERS_MESSAGE = "This is message for others, with mention - {mention}!
+
+[STREAM]
+API_ENDPOINT = "http://127.0.0.1:5000"
+
