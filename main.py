@@ -7,7 +7,8 @@ from cogs.roller import Roller
 from rpg_discord_bot import RPGDiscordBot
 from cogs.dnd5_api import DnD5Api
 from cogs.music import Music
-from cogs.maintain import Maintain, CommandErrorHandler
+from cogs.maintain import Maintain
+from cogs.command_error_handler import CommandErrorHandler
 
 
 def main():
