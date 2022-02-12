@@ -30,6 +30,8 @@ class Maintain(commands.Cog):
 
         if ctx.voice_client is not None:
             return await ctx.voice_client.move_to(channel)
+        else:
+            await ctx.send(f"Couldn't find channel: {channel}")
 
         await channel.connect()
 
@@ -52,7 +54,7 @@ class Maintain(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def clear_today_messages(self, ctx: Context, number: str):
+    async def clear_today_messages(self, ctx: Context, number: int):
         """
         Clears messages created by bot today. Requires number of messages
         :param ctx: Message context
