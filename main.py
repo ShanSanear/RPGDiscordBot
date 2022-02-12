@@ -2,6 +2,7 @@ from pathlib import Path
 
 import toml
 
+from cogs.stream import Stream
 from loggers import create_loggers
 from cogs.roller import Roller
 from rpg_discord_bot import RPGDiscordBot
@@ -20,6 +21,7 @@ def main():
     bot.add_cog(Maintain(bot))
     bot.add_cog(CommandErrorHandler(bot))
     bot.add_cog(Roller(bot))
+    bot.add_cog(Stream(bot))
     bot.run(config["APP"]["TOKEN"])
 
 

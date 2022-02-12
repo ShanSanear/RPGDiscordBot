@@ -24,6 +24,7 @@ class RPGDiscordBot(commands.Bot):
         self._voice_channel_id: int = self._config["REMINDER"]["VOICE_CHANNEL_ID"]
         self._gm_message: str = self._config["REMINDER"]["GM_MESSAGE"]
         self._others_message: str = self._config["REMINDER"]["OTHERS_MESSAGE"]
+        self._streaming_api_endpoint: str = self._config["STREAM"]["API_ENDPOINT"]
         self._following_mapping: Dict[Member, Set[Member]] = defaultdict(set)
 
     async def on_ready(self):
@@ -35,6 +36,10 @@ class RPGDiscordBot(commands.Bot):
     @property
     def following_mapping(self):
         return self._following_mapping
+
+    @property
+    def streaming_api_endpoint(self):
+        return self._streaming_api_endpoint
 
     async def send_reminder_to_text_channel(self, message: str):
         """
