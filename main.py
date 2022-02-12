@@ -3,11 +3,11 @@ from pathlib import Path
 import toml
 
 from loggers import create_loggers
-from roller import Roller
+from cogs.roller import Roller
 from rpg_discord_bot import RPGDiscordBot
-from dnd5_api import DnD5Api
-from music import Music
-from maintain import Maintain, CommandErrorHandler
+from cogs.dnd5_api import DnD5Api
+from cogs.music import Music
+from cogs.maintain import Maintain, CommandErrorHandler
 
 
 def main():

@@ -1,6 +1,6 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
-from typing import List, Iterator, Dict, Set
+from typing import List, Iterator, Dict, Set, Any, MutableMapping
 
 from discord import TextChannel, Member, VoiceState, VoiceChannel, Message, Status
 from discord.ext import commands
@@ -9,14 +9,14 @@ from loggers import general_logger
 
 
 class RPGDiscordBot(commands.Bot):
-    def __init__(self, command_prefix: str, config_data: dict):
+    def __init__(self, command_prefix: str, config_data: MutableMapping[str, Any]):
         """
         Constructor for main bot class.
         :param command_prefix: prefix for commands
         :param config_data: configuration loaded from TOML file
         """
         super(RPGDiscordBot, self).__init__(command_prefix)
-        self._config: dict = config_data
+        self._config: MutableMapping[str, Any] = config_data
         self._gm_id: int = self._config["REMINDER"]["GM_ID"]
         self._blacklisted: List[int] = self._config["REMINDER"]["BLACKLISTED_IDS"]
         self._text_channel_id: int = self._config["REMINDER"]["TEXT_CHANNEL_ID"]
