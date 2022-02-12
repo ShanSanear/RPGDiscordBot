@@ -1,3 +1,4 @@
+import logging
 from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import List, Iterator, Dict, Set, Any, MutableMapping
@@ -41,6 +42,9 @@ class RPGDiscordBot(commands.Bot):
         :param message: message to be send
         """
         text_channel: TextChannel = self.get_channel(self._text_channel_id)
+        if text_channel is None:
+            logging.warning("Couldn't find channel with configured id %s", self._text_channel_id)
+            return
         last_12_hours: datetime.date = datetime.utcnow() - timedelta(hours=12)
         last_messages: Iterator[str] = [message.content for message in
                                         await text_channel.history(after=last_12_hours).flatten()]
