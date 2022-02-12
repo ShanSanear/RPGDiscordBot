@@ -134,7 +134,7 @@ class DnD5Api(commands.Cog):
 
     @commands.command()
     async def search(self, ctx: Context, what_for: str, name: str, *fields_to_show: Iterator[str]):
-        """Searches for spell (for now) using it's name.
+        """Searches for spell (for now) using its name.
         :param ctx - message context
         :param what_for - what are you searching for (for now - only spell)
         :param name - name of the spell
