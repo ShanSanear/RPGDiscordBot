@@ -7,7 +7,7 @@ from discord.ext import commands
 import loggers
 from rpg_discord_bot import RPGDiscordBot
 
-ROLL_RE = re.compile(r"(?P<NumberOfDices>\d+)[dkDK](?P<DiceSize>\d+)")
+ROLL_RE = re.compile(r"(?P<NumberOfDices>\d+)?[dkDK](?P<DiceSize>\d+)")
 
 
 class Roller(commands.Cog):
@@ -35,7 +35,10 @@ class Roller(commands.Cog):
             if not to_be_rolled:
                 await ctx.send(f"'{to_be_rolled}' has not been detected as roll")
                 continue
-            number_of_dices = int(to_be_rolled.group('NumberOfDices'))
+            try:
+                number_of_dices = int(to_be_rolled.group('NumberOfDices'))
+            except TypeError:
+                number_of_dices = 1
             dice_size = int(to_be_rolled.group('DiceSize'))
             current_roll_result = random.randint(number_of_dices, dice_size * number_of_dices + 1)
             roll_results.append((to_be_rolled.group(0), current_roll_result))
