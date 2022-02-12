@@ -2,7 +2,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from typing import List, Iterator, Dict, Set, Any, MutableMapping
 
-from discord import TextChannel, Member, VoiceState, VoiceChannel, Message, Status
+from discord import TextChannel, Member, VoiceState, VoiceChannel, Status
 from discord.ext import commands
 
 from loggers import general_logger
@@ -42,8 +42,8 @@ class RPGDiscordBot(commands.Bot):
         """
         text_channel: TextChannel = self.get_channel(self._text_channel_id)
         last_12_hours: datetime.date = datetime.utcnow() - timedelta(hours=12)
-        last_messages: Iterator[Message] = await text_channel.history(after=last_12_hours).flatten()
-        last_messages: Iterator[Message] = (message.content for message in last_messages)
+        last_messages: Iterator[str] = [message.content for message in
+                                        await text_channel.history(after=last_12_hours).flatten()]
         if message in last_messages:
             general_logger.debug("Message %s appeared in the last 12 hours, skipping", message)
             return
