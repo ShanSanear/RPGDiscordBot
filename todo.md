@@ -2,14 +2,16 @@
 Simple Python Discord bot handling our group stuff
 
 ### stream.py
-- [ ] starting stream
+- [x] starting stream
   - [ ] check if OBS is turned on
-    - [ ] If not, run it
+    - [x] If not, run it
   - [ ] check if discord is turned on directly on the recording machine
     - [ ] If not, run it
   - [ ] check if recording account is in the voice channel
     - [ ] If not, connect it (maybe tricky, no direct API to Discord here)
-  - [ ] check if Discord is foreground application (or maybe make a scene in OBS where ONLY Discord is being shown?)
+  - [x] check if Discord is foreground application (or maybe make a scene in OBS where ONLY Discord is being shown?)
+    - [x] Discord as sole scene in the recording/streaming, rather then checking for Discord to be foreground
+      application
 - [ ] Rename streaming account appropriately (i.e. when streaming - Recording, when not - not Recording)
 - [ ] Add timestamps for youtube stream
   - [ ] Maybe it is possible to get current timestamp from the stream itself using YT API?
