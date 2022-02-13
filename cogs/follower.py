@@ -3,6 +3,7 @@ from typing import Set, Dict
 
 from discord import Member, VoiceState, Status
 from discord.ext import commands
+from discord.ext.commands import Context
 
 from loggers import general_logger
 from rpg_discord_bot import RPGDiscordBot
@@ -10,7 +11,7 @@ from rpg_discord_bot import RPGDiscordBot
 
 class Follower(commands.Cog):
     def __init__(self, bot: RPGDiscordBot):
-        self._bot = bot
+        self.bot = bot
         self._following_mapping: Dict[Member, Set[Member]] = defaultdict(set)
 
     @commands.Cog.listener()
@@ -36,13 +37,47 @@ class Follower(commands.Cog):
             if not follower.voice:
                 continue
             if not being_followed_voice_channel:
-                await self._bot.send_message_to_text_channel(f"{being_followed} disconnected, won't move {follower}")
+                await self.bot.send_message_to_text_channel(f"{being_followed} disconnected, won't move {follower}")
             if follower.voice.channel != being_followed_voice_channel:
-                await self._bot.send_message_to_text_channel(
+                await self.bot.send_message_to_text_channel(
                     f"Moving {follower} to follow {being_followed} into channel {being_followed_voice_channel}")
                 general_logger.info("Moving %s to follow %s into channel '%s'",
                                     follower, being_followed, being_followed_voice_channel)
                 await follower.move_to(being_followed_voice_channel, reason="Following...")
+
+    @commands.command()
+    async def follow_another_user(self, ctx: Context, user_to_be_followed: Member, user_following: Member):
+        """
+        Command which saves information about which user should follow who in voice channels
+        :param ctx: Message context
+        :param user_to_be_followed: Who should be followed
+        :param user_following: Who should be following
+        """
+        general_logger.debug("User to be followed: %s, User following: %s", user_to_be_followed, user_following)
+        await ctx.send(f"User to be followed: {user_to_be_followed}, User following: {user_following}")
+        self.bot.add_user_to_be_followed(user_to_be_followed, user_following)
+
+    @commands.command()
+    async def stop_follow_another_user(self, ctx: Context, user_being_followed: Member, user_following: Member):
+        """
+        Stops user from being followed
+        :param ctx: Message context
+        :param user_being_followed: Who is being currently followed
+        :param user_following: Who is following
+        """
+        general_logger.debug("User being followed: %s, User that will no longer follow: %s", user_being_followed,
+                             user_following)
+        await ctx.send(f"User {user_being_followed} will no longer be followed by {user_following}")
+        self.bot.disable_following_of_user(user_being_followed, user_following)
+
+    @commands.command()
+    async def show_current_followers(self, ctx: Context):
+        """
+        Shows who is followed by who.
+        :param ctx: Message context
+        """
+        for being_followed, followers in self.bot.following_mapping.items():
+            await ctx.send(f"{being_followed} is being followed by {','.join(str(follower) for follower in followers)}")
 
 
 

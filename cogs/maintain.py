@@ -72,39 +72,3 @@ class Maintain(commands.Cog):
         """
         general_logger.debug("Message: %s, author: %s", message, message.author)
         return message.author == self.bot.user
-
-    @commands.command()
-    async def follow_another_user(self, ctx: Context, user_to_be_followed: Member, user_following: Member):
-        """
-        Command which saves information about which user should follow who in voice channels
-        :param ctx: Message context
-        :param user_to_be_followed: Who should be followed
-        :param user_following: Who should be following
-        """
-        general_logger.debug("User to be followed: %s, User following: %s", user_to_be_followed, user_following)
-        await ctx.send(f"User to be followed: {user_to_be_followed}, User following: {user_following}")
-        self.bot.add_user_to_be_followed(user_to_be_followed, user_following)
-
-    @commands.command()
-    async def stop_follow_another_user(self, ctx: Context, user_being_followed: Member, user_following: Member):
-        """
-        Stops user from being followed
-        :param ctx: Message context
-        :param user_being_followed: Who is being currently followed
-        :param user_following: Who is following
-        """
-        general_logger.debug("User being followed: %s, User that will no longer follow: %s", user_being_followed,
-                             user_following)
-        await ctx.send(f"User {user_being_followed} will no longer be followed by {user_following}")
-        self.bot.disable_following_of_user(user_being_followed, user_following)
-
-    @commands.command()
-    async def show_current_followers(self, ctx: Context):
-        """
-        Shows who is followed by who.
-        :param ctx: Message context
-        """
-        for being_followed, followers in self.bot.following_mapping.items():
-            await ctx.send(f"{being_followed} is being followed by {','.join(str(follower) for follower in followers)}")
-
-
