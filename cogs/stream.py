@@ -29,8 +29,8 @@ class Stream(commands.Cog):
     def _call_api_get(self, endpoint):
         pass
 
+    @commands.group(pass_context=True)
     @commands.is_owner()
-    @commands.group(pass_context=True, invoke_without_command=True)
     async def obs(self, ctx: Context):
         """
         OBS related commands, check help for more info
@@ -39,17 +39,17 @@ class Stream(commands.Cog):
         """
         pass
 
+    @obs.command(name='start', pass_context=True)
     @commands.is_owner()
-    @obs.command(pass_context=True)
-    async def start(self, ctx: Context):
+    async def start_obs(self, ctx: Context):
         """
         Start OBS application on recording machine
         """
         await self.run_obs_if_turned_off(ctx)
 
     @commands.is_owner()
-    @obs.command(pass_context=True)
-    async def stop(self, ctx: Context):
+    @obs.command(name='stop', pass_context=True)
+    async def stop_obs(self, ctx: Context):
         """
         Stop OBS application on recording machine
         """
@@ -63,8 +63,8 @@ class Stream(commands.Cog):
         """
 
     @commands.is_owner()
-    @record.command(pass_context=True)
-    async def start(self, ctx: Context):
+    @record.command(name='start', pass_context=True)
+    async def start_record(self, ctx: Context):
         """
         Start OBS recording
         """
@@ -78,8 +78,8 @@ class Stream(commands.Cog):
         await ctx.send("Starting OBS **recording**")
 
     @commands.is_owner()
-    @record.command(pass_context=True)
-    async def stop(self, ctx: Context):
+    @record.command(name='stop', pass_context=True)
+    async def stop_record(self, ctx: Context):
         """
         Stop OBS recording
         """
@@ -104,8 +104,8 @@ class Stream(commands.Cog):
         pass
 
     @commands.is_owner()
-    @stream.command(pass_context=True)
-    async def start(self, ctx: Context):
+    @stream.command(name='start', pass_context=True)
+    async def start_stream(self, ctx: Context):
         """
         Start OBS stream
         """
@@ -128,8 +128,8 @@ class Stream(commands.Cog):
             self._obs_response = await self._turn_off_obs()
 
     @commands.is_owner()
-    @stream.command(pass_context=True)
-    async def stop(self, ctx: Context):
+    @stream.command(name='stop', pass_context=True)
+    async def stop_stream(self, ctx: Context):
         """
         Stop OBS stream
         """
@@ -144,8 +144,6 @@ class Stream(commands.Cog):
         general_logger.info("Stopping OBS stream...")
         await self._stop_obs_stream()
         await ctx.send("Stopped OBS **stream**")
-        await self._turn_off_obs()
-        await ctx.send("OBS Turned off")
 
     async def _turn_on_obs(self) -> dict:
         """
