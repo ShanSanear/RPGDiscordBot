@@ -21,6 +21,7 @@ class NotExactMatch(ResourceNotFound):
     pass
 
 
-def call_endpoint_post(endpoint, json=None):
+def call_endpoint_post(endpoint, json=None) -> requests.Response:
     response = requests.post(endpoint, json=json)
     response.raise_for_status()
+    return response
