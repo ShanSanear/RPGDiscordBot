@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 import discord
-from discord import Member, Message
+from discord import Message
 from discord.ext import commands
 from discord.ext.commands import Context
 
@@ -20,7 +20,6 @@ class Maintain(commands.Cog):
         :param bot: RPGDiscordBot instance
         """
         self.bot = bot
-        self._users_to_be_followed = {}
 
     @commands.command()
     async def join(self, ctx, *, channel: discord.VoiceChannel):
