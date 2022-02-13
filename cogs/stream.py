@@ -66,14 +66,22 @@ class Stream(commands.Cog):
         await self._stop_obs_stream()
         await self._turn_off_obs()
 
-    async def _turn_on_obs(self):
+    async def _turn_on_obs(self) -> dict:
+        """
+        Turns on OBS
+        :return: API response
+        """
         general_logger.info("Turning on obs...")
         response = call_endpoint_post(urljoin(self._obs_endpoint, "run"))
         self._obs_on = True
         return response.json()
 
     async def _turn_off_obs(self):
-        general_logger.info("Turning on obs...")
+        """
+        Turns off OBS
+        :return: API response
+        """
+        general_logger.info("Turning off obs...")
         response = call_endpoint_post(urljoin(self._obs_endpoint, "stop"), json=self._obs_response)
         self._obs_on = False
         self._obs_response = {}
