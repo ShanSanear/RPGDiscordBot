@@ -25,6 +25,18 @@ class Stream(commands.Cog):
         self._stream_on = False
         self._obs_response = {}
 
+    def _call_api_post(self, endpoint, json=None):
+        try:
+            response = requests.post(endpoint, json=json)
+            response.raise_for_status()
+        except ConnectionRefusedError as err:
+            self.bot.send_message_to_text_channel(
+                f"Couldn't reach configured endpoint: {endpoint}. Check if it is reachable.")
+            raise err
+
+    def _call_api_get(self, endpoint):
+        pass
+
     @commands.group(pass_context=True)
     async def stream(self, ctx: Context):
         """
@@ -37,8 +49,6 @@ class Stream(commands.Cog):
     async def start(self, ctx: Context):
         """
         Start stream
-        :param ctx:
-        :return:
         """
         general_logger.info("Starting OBS stream...")
         if not self._obs_on:
@@ -51,6 +61,9 @@ class Stream(commands.Cog):
 
     @stream.command(pass_context=True)
     async def stop(self, ctx: Context):
+        """
+        Stop stream
+        """
         if not self._obs_on:
             general_logger.warning("Obs is not turned on")
             return
@@ -64,23 +77,21 @@ class Stream(commands.Cog):
 
     async def _turn_on_obs(self):
         general_logger.info("Turning on obs...")
-        response = requests.post(urljoin(self._obs_endpoint, "run"))
-        response.raise_for_status()
+        response = self._call_api_post(urljoin(self._obs_endpoint, "run"))
         self._obs_on = True
         return response.json()
 
     async def _turn_off_obs(self):
         general_logger.info("Turning on obs...")
-        response = requests.post(urljoin(self._obs_endpoint, "stop"), json=self._obs_response)
-        response.raise_for_status()
+        response = self._call_api_post(urljoin(self._obs_endpoint, "stop"), json=self._obs_response)
         self._obs_on = False
         self._obs_response = {}
         general_logger.info("Turn off OBS response: %s", response.json())
 
     async def _start_obs_stream(self):
         general_logger.info("Starting recording...")
-        requests.post(urljoin(self._obs_endpoint, "recording/start"))
+        self._call_api_post(endpoint=urljoin(self._obs_endpoint, "recording/start"), )
 
     async def _stop_obs_stream(self):
         general_logger.info("Stopping recording...")
-        requests.post(urljoin(self._obs_endpoint, "recording/stop"))
+        self._call_api_post(endpoint=urljoin(self._obs_endpoint, "recording/stop"), )
