@@ -76,8 +76,5 @@ class Follower(commands.Cog):
         Shows who is followed by who.
         :param ctx: Message context
         """
-        for being_followed, followers in self.bot.following_mapping.items():
+        for being_followed, followers in self._following_mapping.items():
             await ctx.send(f"{being_followed} is being followed by {','.join(str(follower) for follower in followers)}")
-
-
-
