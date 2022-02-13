@@ -1,5 +1,4 @@
 import asyncio
-import json
 from urllib.parse import urljoin
 
 import requests
@@ -28,6 +27,10 @@ class Stream(commands.Cog):
 
     @commands.group(pass_context=True)
     async def stream(self, ctx: Context):
+        """
+        Manage stream, get help to find out more
+        :param ctx:
+        """
         pass
 
     @stream.command(pass_context=True)
