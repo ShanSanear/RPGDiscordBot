@@ -40,14 +40,15 @@ class RPGDiscordBot(commands.Bot):
     def streaming_api_endpoint(self):
         return self._streaming_api_endpoint
 
-    async def send_reminder_to_text_channel(self, message: str):
+    async def send_message_to_text_channel(self, message: str):
         """
         Send reminder to default text channel
         :param message: message to be send
         """
         text_channel: TextChannel = self.get_channel(self._text_channel_id)
         if text_channel is None:
-            logging.warning("Couldn't find channel with configured id %s", self._text_channel_id)
+            logging.warning("Couldn't find channel with configured id %s. Message to be sent: %s",
+                            self._text_channel_id, message)
             return
         last_12_hours: datetime.date = datetime.utcnow() - timedelta(hours=12)
         last_messages: Iterator[str] = [message.content for message in
@@ -94,7 +95,7 @@ class RPGDiscordBot(commands.Bot):
         else:
             message = self._others_message.format(mention=member.mention)
 
-        await self.send_reminder_to_text_channel(message)
+        await self.send_message_to_text_channel(message)
 
     def add_user_to_be_followed(self, being_followed: Member, following: Member):
         """
