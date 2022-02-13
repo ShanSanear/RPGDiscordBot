@@ -16,7 +16,7 @@ ROLL_RE = re.compile(r"(?P<NumberOfDices>\d+)?[dkDK](?P<DiceSize>\d+)")
 @dataclass
 class RollResult:
     entry: str
-    results: list[int]
+    results: List[int]
 
     @property
     def complete_result(self):
