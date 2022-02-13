@@ -46,7 +46,6 @@ class Maintain(commands.Cog):
     async def shutdown(self, ctx):
         """Shuts down bot"""
         await self.bot.send_message_to_text_channel("Turning off")
-        await ctx.bot.logout()
         await ctx.bot.close()
 
     @commands.command()
