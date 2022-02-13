@@ -1,7 +1,7 @@
 import asyncio
 
 import discord
-import youtube_dl as youtube_dl
+import youtube_dl
 from discord import AudioSource
 
 youtube_dl.utils.bug_reports_message = lambda: ''

@@ -32,6 +32,11 @@ class Stream(commands.Cog):
 
     @stream.command(pass_context=True)
     async def start(self, ctx: Context):
+        """
+        Start stream
+        :param ctx:
+        :return:
+        """
         general_logger.info("Starting OBS stream...")
         if not self._obs_on:
             self._obs_response = await self._turn_on_obs()

@@ -4,7 +4,7 @@ from discord.ext.commands import Context
 
 from loggers import general_logger
 from rpg_discord_bot import RPGDiscordBot
-from ytdl_source import YTDLSource
+from dependencies.ytdl_source import YTDLSource
 
 
 class Music(commands.Cog):
