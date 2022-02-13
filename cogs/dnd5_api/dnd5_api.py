@@ -3,10 +3,10 @@ from typing import Iterator
 from discord.ext import commands
 from discord.ext.commands import Context
 
+from cogs.dnd5_api.resource.errors import ResourceNotFound
 from cogs.dnd5_api.resource.spell import Spell
 from loggers import general_logger
 from rpg_discord_bot import RPGDiscordBot
-from utils import ResourceNotFound
 
 
 class DnD5Api(commands.Cog):

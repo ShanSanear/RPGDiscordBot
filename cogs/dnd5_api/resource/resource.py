@@ -2,8 +2,8 @@ from urllib.parse import urljoin
 
 import requests
 
+from cogs.dnd5_api.resource.errors import ResourceNotFound
 from loggers import general_logger
-from utils import ResourceNotFound
 
 
 class Resource:

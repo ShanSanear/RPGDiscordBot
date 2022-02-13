@@ -4,9 +4,9 @@ from urllib.parse import urljoin
 from discord.ext import commands
 from discord.ext.commands import Context
 
+from dependencies.utils import call_endpoint_post
 from loggers import general_logger
 from rpg_discord_bot import RPGDiscordBot
-from utils import call_endpoint_post
 
 
 class Stream(commands.Cog):

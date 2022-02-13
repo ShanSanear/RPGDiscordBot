@@ -1,7 +1,7 @@
 from typing import Optional, Iterator
 
 from cogs.dnd5_api.resource.resource import Resource
-from utils import flyweight
+from dependencies.utils import flyweight
 
 
 @flyweight
