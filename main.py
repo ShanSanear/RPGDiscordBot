@@ -1,12 +1,14 @@
+from cogs.command_error_handler import CommandErrorHandler
+from cogs.dnd5_api import DnD5Api
+from cogs.follower import Follower
+from cogs.maintain import Maintain
+from cogs.music import Music
+from cogs.reminder import Reminder
+from cogs.roller import Roller
 from cogs.stream import Stream
 from config.config import config
 from loggers import create_loggers
-from cogs.roller import Roller
 from rpg_discord_bot import RPGDiscordBot
-from cogs.dnd5_api import DnD5Api
-from cogs.music import Music
-from cogs.maintain import Maintain
-from cogs.command_error_handler import CommandErrorHandler
 
 
 def main():
@@ -18,6 +20,8 @@ def main():
     bot.add_cog(CommandErrorHandler(bot))
     bot.add_cog(Roller(bot))
     bot.add_cog(Stream(bot))
+    bot.add_cog(Follower(bot))
+    bot.add_cog(Reminder(bot))
     bot.run(config.APP.TOKEN)
 
 
