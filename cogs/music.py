@@ -20,7 +20,7 @@ class Music(commands.Cog):
         self.bot = bot
 
     @commands.group(pass_context=True)
-    def music(self, ctx):
+    async def music(self, ctx):
         """
         Music playing/streaming functionality, check help to find out more
         :param ctx:
