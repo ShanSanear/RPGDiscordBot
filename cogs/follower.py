@@ -15,10 +15,10 @@ class Follower(commands.Cog):
         self._following_mapping: Dict[Member, Set[Member]] = defaultdict(set)
 
     @commands.Cog.listener()
-    def on_voice_state_update(self, member: Member, before: VoiceState, after: VoiceState):
-        self._process_following(member, before, after)
+    async def on_voice_state_update(self, member: Member, before: VoiceState, after: VoiceState):
+        await self._process_following(member, before, after)
 
-    def _process_following(self, being_followed: Member, before: VoiceState, after: VoiceState):
+    async def _process_following(self, being_followed: Member, before: VoiceState, after: VoiceState):
         """
         Processes following mapping - in case user changes its voice channel
         :param being_followed: User that voice change was happening for
