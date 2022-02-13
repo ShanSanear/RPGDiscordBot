@@ -1,4 +1,3 @@
-import logging
 from datetime import datetime, timedelta
 from typing import Iterator
 
@@ -36,8 +35,8 @@ class RPGDiscordBot(commands.Bot):
         """
         text_channel: TextChannel = self.get_channel(self._text_channel_id)
         if text_channel is None:
-            logging.warning("Couldn't find channel with configured id %s. Message to be sent: %s",
-                            self._text_channel_id, message)
+            general_logger.warning("Couldn't find channel with configured id %s. Message to be sent: %s",
+                                   self._text_channel_id, message)
             return
         last_12_hours: datetime.date = datetime.utcnow() - timedelta(hours=12)
         last_messages: Iterator[str] = [message.content for message in
@@ -46,4 +45,3 @@ class RPGDiscordBot(commands.Bot):
             general_logger.debug("Message %s appeared in the last 12 hours, skipping", message)
             return
         await text_channel.send(message)
-
