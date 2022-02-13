@@ -95,23 +95,3 @@ class RPGDiscordBot(commands.Bot):
             message = self._others_message.format(mention=member.mention)
 
         await self.send_message_to_text_channel(message)
-
-    def add_user_to_be_followed(self, being_followed: Member, following: Member):
-        """
-        Makes user be followed by another user
-        :param being_followed: User that is to be followed
-        :param following: User that will be following
-        """
-        self._following_mapping[being_followed].add(following)
-
-    def disable_following_of_user(self, being_followed: Member, following: Member):
-        """
-        Disables user being followed by another one
-        :param being_followed: User that is being followed
-        :param following: User that is following
-        """
-        self._following_mapping[being_followed].remove(following)
-
-    async def process_following(self, being_followed: Member, before: VoiceState, after: VoiceState):
-
-        pass
