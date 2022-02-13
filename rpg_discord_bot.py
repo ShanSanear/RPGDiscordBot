@@ -1,30 +1,29 @@
 import logging
 from collections import defaultdict
 from datetime import datetime, timedelta
-from typing import List, Iterator, Dict, Set, Any, MutableMapping
+from typing import List, Iterator, Dict, Set
 
 from discord import TextChannel, Member, VoiceState, VoiceChannel, Status
 from discord.ext import commands
 
+from config.config import config
 from loggers import general_logger
 
 
 class RPGDiscordBot(commands.Bot):
-    def __init__(self, command_prefix: str, config_data: MutableMapping[str, Any]):
+    def __init__(self, command_prefix: str):
         """
         Constructor for main bot class.
         :param command_prefix: prefix for commands
-        :param config_data: configuration loaded from TOML file
         """
         super(RPGDiscordBot, self).__init__(command_prefix)
-        self._config: MutableMapping[str, Any] = config_data
-        self._gm_id: int = self._config["REMINDER"]["GM_ID"]
-        self._blacklisted: List[int] = self._config["REMINDER"]["BLACKLISTED_IDS"]
-        self._text_channel_id: int = self._config["REMINDER"]["TEXT_CHANNEL_ID"]
-        self._voice_channel_id: int = self._config["REMINDER"]["VOICE_CHANNEL_ID"]
-        self._gm_message: str = self._config["REMINDER"]["GM_MESSAGE"]
-        self._others_message: str = self._config["REMINDER"]["OTHERS_MESSAGE"]
-        self._streaming_api_endpoint: str = self._config["STREAM"]["API_ENDPOINT"]
+        self._gm_id: int = config.REMINDER.GM_ID
+        self._blacklisted: List[int] = config.REMINDER.BLACKLISTED_IDS
+        self._text_channel_id: int = config.REMINDER.TEXT_CHANNEL_ID
+        self._voice_channel_id: int = config.REMINDER.VOICE_CHANNEL_ID
+        self._gm_message: str = config.REMINDER.GM_MESSAGE
+        self._others_message: str = config.REMINDER.OTHERS_MESSAGE
+        self._streaming_api_endpoint: str = config.STREAM.API_ENDPOINT
         self._following_mapping: Dict[Member, Set[Member]] = defaultdict(set)
 
     async def on_ready(self):

@@ -15,4 +15,4 @@ class Config:
     STREAM: STREAM
 
 
-config = dacite.from_dict(Config, toml.load("config.toml"))
+config: Config = dacite.from_dict(Config, toml.load("config.toml"))
