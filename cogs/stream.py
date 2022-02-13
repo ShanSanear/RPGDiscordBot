@@ -1,12 +1,12 @@
 import asyncio
 from urllib.parse import urljoin
 
-import requests
 from discord.ext import commands
 from discord.ext.commands import Context
 
 from loggers import general_logger
 from rpg_discord_bot import RPGDiscordBot
+from utils import call_endpoint_post
 
 
 class Stream(commands.Cog):
@@ -24,15 +24,6 @@ class Stream(commands.Cog):
         self._obs_on = False
         self._stream_on = False
         self._obs_response = {}
-
-    def _call_api_post(self, endpoint, json=None):
-        try:
-            response = requests.post(endpoint, json=json)
-            response.raise_for_status()
-        except ConnectionRefusedError as err:
-            self.bot.send_message_to_text_channel(
-                f"Couldn't reach configured endpoint: {endpoint}. Check if it is reachable.")
-            raise err
 
     def _call_api_get(self, endpoint):
         pass
@@ -77,21 +68,21 @@ class Stream(commands.Cog):
 
     async def _turn_on_obs(self):
         general_logger.info("Turning on obs...")
-        response = self._call_api_post(urljoin(self._obs_endpoint, "run"))
+        response = call_endpoint_post(urljoin(self._obs_endpoint, "run"))
         self._obs_on = True
         return response.json()
 
     async def _turn_off_obs(self):
         general_logger.info("Turning on obs...")
-        response = self._call_api_post(urljoin(self._obs_endpoint, "stop"), json=self._obs_response)
+        response = call_endpoint_post(urljoin(self._obs_endpoint, "stop"), json=self._obs_response)
         self._obs_on = False
         self._obs_response = {}
         general_logger.info("Turn off OBS response: %s", response.json())
 
     async def _start_obs_stream(self):
         general_logger.info("Starting recording...")
-        self._call_api_post(endpoint=urljoin(self._obs_endpoint, "recording/start"), )
+        call_endpoint_post(endpoint=urljoin(self._obs_endpoint, "recording/start"), )
 
     async def _stop_obs_stream(self):
         general_logger.info("Stopping recording...")
-        self._call_api_post(endpoint=urljoin(self._obs_endpoint, "recording/stop"), )
+        call_endpoint_post(endpoint=urljoin(self._obs_endpoint, "recording/stop"), )

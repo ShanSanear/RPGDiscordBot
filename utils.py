@@ -1,3 +1,6 @@
+import requests
+
+
 def flyweight(cls):
     """
     Flyweight class wrapper.
@@ -16,3 +19,8 @@ class ResourceNotFound(Exception):
 
 class NotExactMatch(ResourceNotFound):
     pass
+
+
+def call_endpoint_post(endpoint, json=None):
+    response = requests.post(endpoint, json=json)
+    response.raise_for_status()

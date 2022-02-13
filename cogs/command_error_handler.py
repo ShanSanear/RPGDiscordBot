@@ -38,15 +38,15 @@ class CommandErrorHandler(commands.Cog):
                 return
 
         ignored = (commands.CommandNotFound,)
-        error = getattr(error, 'original', error)
+        original_error = getattr(error, 'original', error)
 
-        if isinstance(error, ignored):
+        if isinstance(original_error, ignored):
             return
 
-        if isinstance(error, commands.DisabledCommand):
+        if isinstance(original_error, commands.DisabledCommand):
             await ctx.send(f'{ctx.command} has been disabled.')
 
-        elif isinstance(error, commands.NoPrivateMessage):
+        elif isinstance(original_error, commands.NoPrivateMessage):
             try:
                 await ctx.author.send(f'{ctx.command} can not be used in Private Messages.')
             except discord.HTTPException:
@@ -56,3 +56,5 @@ class CommandErrorHandler(commands.Cog):
             general_logger.error('Exception type: %s', type(error))
             general_logger.error('Exception Value: %s', error)
             general_logger.error('Exception traceback: %s', traceback.extract_stack(error))
+            ctx.author.send(
+                f"Command: {ctx.command} failed wtih error of type: {type(original_error).__name__}. Check logs for details.")
