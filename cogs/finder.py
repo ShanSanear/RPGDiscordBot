@@ -38,7 +38,7 @@ class Finder(commands.Cog):
             summary = page.summary
             wiki_link_markup = page.url
             await ctx.send(
-                content=f"{summary} {wiki_link_markup}"[:self.__MAX_SIZE]
+                content=f"\n{summary} {wiki_link_markup}"[:self.__MAX_SIZE]
             )
 
     @search.command(name='wiki_full', pass_context=True)
@@ -70,7 +70,7 @@ class Finder(commands.Cog):
                 if len(section_content) > self.__MAX_SIZE:
                     await ctx.send(content=f'Following section will be trunctuated: {section["title"]}')
                 await ctx.send(
-                    content=f"**{section['title']}**\n{section['content']}"[:self.__MAX_SIZE]
+                    content=f"\n**{section['title']}**\n{section['content']}"[:self.__MAX_SIZE]
                 )
 
     @search.command(name='spell', pass_context=True)
