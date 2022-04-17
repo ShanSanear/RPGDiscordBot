@@ -59,7 +59,8 @@ class Finder(commands.Cog):
                 return
 
             await ctx.send(
-                content=page.content['content'][:self.__MAX_SIZE]
+                content=f"\n**Summary**\n{page.content['content'][:self.__MAX_SIZE]}"
+
             )
             general_logger.debug("Sections in page %s: '%s'",
                                  name,
