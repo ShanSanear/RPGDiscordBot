@@ -21,7 +21,7 @@ class Finder(commands.Cog):
     @commands.group(pass_context=True)
     async def search(self, ctx: Context):
         """
-        General search function placeholder
+        Here are some search functions for wikis, spells, run help for given command for more info
         """
         pass
 
@@ -48,7 +48,8 @@ class Finder(commands.Cog):
         Provides all possible information based on sections.
         :param ctx:  Context
         :param name: Wiki page which is being searched for
-        :param wiki_name: Wiki which is being searched for
+        :param wiki_name: Wiki which is being searched for,
+        Example wikis: dungeons, pathfinder, forgottenrealms, warhammerfantasy, d-n-d5e
         """
         async with ctx.typing():
             general_logger.debug("Searching wiki '%s' for '%s'", wiki_name, name)
@@ -82,4 +83,4 @@ class Finder(commands.Cog):
         """
         async with ctx.typing():
             content = await DnD5Api().dnd_search("spell", name)
-            await ctx.send(content)[:self.__MAX_SIZE]
+            await ctx.send(content=content[:self.__MAX_SIZE])
