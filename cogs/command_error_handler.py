@@ -55,6 +55,5 @@ class CommandErrorHandler(commands.Cog):
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
             general_logger.error('Exception type: %s', type(error))
             general_logger.error('Exception Value: %s', error)
-            general_logger.error('Exception traceback: %s', traceback.extract_stack(error))
             ctx.author.send(
                 f"Command: {ctx.command} failed wtih error of type: {type(original_error).__name__}. Check logs for details.")
