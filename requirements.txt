@@ -3,5 +3,5 @@ discord>=1.0.1
 toml>=0.10.2
 youtube-dl>=2020.6.16.1
 requests>=2.25.1
-
 dacite>=1.6.0
+sqlalchemy >= 1.4.32
