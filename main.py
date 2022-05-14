@@ -4,6 +4,7 @@ from cogs.follower import Follower
 from cogs.maintain import Maintain
 from cogs.music import Music
 from cogs.reminder import Reminder
+from cogs.renamer import Renamer
 from cogs.roller import Roller
 from cogs.stream import Stream
 from config.config import config
@@ -22,6 +23,7 @@ def main():
     bot.add_cog(Follower(bot))
     bot.add_cog(Reminder(bot))
     bot.add_cog(Finder(bot))
+    bot.add_cog(Renamer(bot))
     bot.run(config.APP.TOKEN)
 
 
