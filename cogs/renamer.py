@@ -1,4 +1,4 @@
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 
 from discord import Member, User
 from discord.ext import commands
@@ -21,7 +21,7 @@ class Renamer(commands.Cog):
         await ctx.send(f"Current profile: {self._current_profile}")
         message = ""
         for user_id, name_to_set in self.renaming_mapping[self._current_profile].items():
-            members: Member = await ctx.message.guild.query_members(user_ids=[user_id])
+            members: List[Member] = await ctx.message.guild.query_members(user_ids=[user_id])
             member = members[0]
             message += f"{member} has name set for this profile to '{name_to_set}'\n"
         await ctx.send(message)
@@ -38,7 +38,7 @@ class Renamer(commands.Cog):
     @profile.command(name='set', pass_context=True)
     async def set_profile(self, ctx, profile_name):
         """
-        Sets the profile and if its not available - creates it
+        Sets the profile and if it's not available - creates it
         :param ctx: Context
         :param profile_name: Profile name
         """
@@ -88,7 +88,7 @@ class Renamer(commands.Cog):
         if not profile_to_apply:
             profile_to_apply = self._current_profile
         await ctx.send(f"Applying profile {profile_to_apply}")
-        for user_id, name_to_set in self.renaming_mapping[self._current_profile].items():
+        for user_id, name_to_set in self.renaming_mapping[profile_to_apply].items():
             members = await ctx.message.guild.query_members(user_ids=[user_id])
             member = members[0]
             await member.edit(nick=name_to_set, reason=f'Setting name for profile: {profile_to_apply}')
