@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 import discord
-from discord import Message
+from discord import Message, Member
 from discord.ext import commands
 from discord.ext.commands import Context
 
@@ -70,3 +70,18 @@ class Maintain(commands.Cog):
         """
         general_logger.debug("Message: %s, author: %s", message, message.author)
         return message.author == self.bot.user
+
+    @commands.command()
+    async def change_nick(self, ctx: Context, member_to_change: Member, name: str, reason=None):
+        """
+        Changes nick of given Member
+        :param ctx: Context
+        :param member_to_change: Member which name is being changed
+        :param name: Name to be changed to
+        :param reason: Optional, reason for the change
+        """
+        if not ctx.message.author.guild_permissions.administrator:
+            await ctx.send(f"User {ctx.message.author} is not an administrator")
+            return
+        await ctx.send(f"Changing name of {member_to_change} to {name}")
+        await member_to_change.edit(nick=name, reason=reason)
