@@ -12,7 +12,11 @@ Simple Python Discord bot handling our group stuff
   - [x] check if Discord is foreground application (or maybe make a scene in OBS where ONLY Discord is being shown?)
     - [x] Discord as sole scene in the recording/streaming, rather then checking for Discord to be foreground
       application
+- [ ] This functionality shall not explicitly check for things already working or not internally, since some things may
+  be already turned on manually
 - [ ] Rename streaming account appropriately (i.e. when streaming - Recording, when not - not Recording)
+- [ ] Rename stream itself appropriately
+  - [ ] Don't forget about limiting this only to the administrator/owner of the bot or specific group in Discord
 - [ ] Add timestamps for youtube stream
   - [ ] Maybe it is possible to get current timestamp from the stream itself using YT API?
   - [ ] If not, just get the timing from start of the stream till the end of it
@@ -28,3 +32,8 @@ Simple Python Discord bot handling our group stuff
   - [x] this will make it possible to also get configuration data from different parts of the code and not only from the
     main bot class
 
+### renamer.py
+
+- [x] Make it possible to rename guild members
+- [x] Those renaming must be possible to specify by some sort of profile
+- [ ] Renaming should be persistent, i.e. using database 
