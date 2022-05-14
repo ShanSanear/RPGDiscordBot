@@ -62,7 +62,7 @@ class Roller(commands.Cog):
     @commands.command()
     async def roll(self, ctx: commands.Context, *rolls_to_roll):
         """
-        Roll specified rolls
+        Roll specified rolls, !roll 1d20, !roll 1d12 3d15 etc.
         :param ctx: Context
         :param rolls_to_roll Rolls to roll in format of NumberOfDices[dk]DiceSize, can provide multiple rolls split using spaces
         """
