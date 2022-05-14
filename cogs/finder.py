@@ -32,6 +32,7 @@ class Finder(commands.Cog):
         :param ctx:  Context
         :param name: Wiki page which is being searched for
         :param wiki_name: Wiki which is being searched for
+        Example wikis: dungeons, pathfinder, forgottenrealms, warhammerfantasy, d-n-d5e
         """
         async with ctx.typing():
             page = fandom.page(name, wiki=wiki_name)
