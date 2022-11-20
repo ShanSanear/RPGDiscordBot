@@ -10,23 +10,26 @@ from discord.ext import commands
 import loggers
 from rpg_discord_bot import RPGDiscordBot
 
-ROLL_RE = re.compile(r"(?P<NumberOfDices>\d+)?[dkDK](?P<DiceSize>\d+)")
+ROLL_RE = re.compile(r"(?P<NumberOfDices>\d+)?[dkDK](?P<DiceSize>\d+)(\+(?P<ADD>\d+))?")
 
 
 @dataclass
 class RollResult:
     entry: str
     results: List[int]
+    add: int
 
     @property
     def complete_result(self):
-        return sum(self.results)
+        return sum(self.results) + self.add
 
     def __str__(self):
         if len(self.results) > 1:
-            return f"**{self.complete_result}** ({'+'.join([str(value) for value in self.results])}) [{self.entry}]"
+            return f"**{self.complete_result}** " \
+                   f"({'+'.join([str(value) for value in self.results])}" \
+                   f"{'+' + str(self.add) if self.add else ''}) [{self.entry}]"
         else:
-            return f"**{self.complete_result}** [{self.entry}]"
+            return f"**{self.complete_result}** [{self.entry}{'+' + str(self.add) if self.add else ''}]"
 
     def __repr__(self):
         return str(self)
@@ -41,9 +44,11 @@ def get_roll_result(roll_entry: re.Match):
     except TypeError:
         number_of_dices = 1
     dice_size: int = int(roll_entry['DiceSize'])
+    added_value = 0 if roll_entry['ADD'] is None else int(roll_entry['ADD'])
     return RollResult(
         entry=f"{number_of_dices}d{dice_size}",
-        results=[random.randint(1, dice_size) for _ in range(number_of_dices)]
+        results=[random.randint(1, dice_size) for _ in range(number_of_dices)],
+        add=added_value
     )
 
 
